@@ -1,0 +1,25 @@
+{# src/Ace/UserBundle/Resources/views/User/resetting.email.twig #}
+
+{% block subject %}Welcome to codebender{% endblock %}
+
+{% block body_text %}
+{% autoescape false %}
+Hello {{ user.username }} !
+
+Welcome to codebender.
+To finish activating your account - please visit {{ confirmationUrl }}
+
+Regards,
+the codebender team
+
+{% endautoescape %}
+{% endblock %}
+
+{% block body_html %}
+{#
+    You can of course render the html directly here.
+    Including a template as done here allows keeping things DRY by using
+    the template inheritance in it
+#}
+{% include 'AceUserBundle:User:confirmation_email.html.twig' %}
+{% endblock %}

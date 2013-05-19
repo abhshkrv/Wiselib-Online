@@ -1,0 +1,24 @@
+{% extends '::container.html.twig' %}
+{% block title %}
+{{ site_name }} blog 
+{% endblock %}
+
+
+
+{% block mainspan %}
+<div class="page-header">
+  <h1>{{post.title}}</h1>
+</div>
+
+<div id="post">
+
+<div class="row-fluid">
+	<div class="span12">	
+		{{ post.text|raw }}
+	</div>
+</div>
+
+</div>
+
+{% endblock %}
+

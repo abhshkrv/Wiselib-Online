@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>{% block title %}codebender{% endblock %}</title>
+		<link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />
+        {% include '::common_stylesheets.html.twig' %}
+		<style type="text/css">
+			body
+			{
+				padding-top: 60px;
+				padding-bottom: 50px;
+				background: url({{ asset("blizzard.png")}});
+			}
+
+			@media (max-width: 979px)
+			{
+				body
+				{
+					padding-top: 0px;
+				}
+			}
+		</style>
+
+		<style type="text/css">
+			#logo_small
+			{
+				width: 25px;
+				height: 25px;
+				margin-top: -3px;
+				border-radius: 3px;
+			}
+
+			#avatar
+			{
+				float: left;
+				width:25px;
+				height:25px;
+				margin: -3px 5px 0 0;
+				border-radius: 3px;
+			}
+
+		</style>
+        {% block stylesheets_base %}{% endblock %}
+        {% block stylesheets %}{% endblock %}
+
+{% include '::common_javascript.html.twig' %}
+
+<style type="text/css">
+
+.slide-out-div {
+	background: url('{{ asset("blizzard.png")}}');
+	padding: 20px;
+	width: 250px;
+/*    border: 1px solid #29216d;*/
+
+	line-height: 1em;
+	position: fixed!important;
+	height: 575px!important;
+	top: 120px!important;
+	left: -292px;
+	background-color: #CC6D00;
+	border-style: solid none solid solid;
+	border-top-color: white;
+	border-bottom-color: white;
+	border-left-color: white;
+	border-top-left-radius: 0px;
+	border-top-right-radius: 4px;
+	border-bottom-right-radius: 4px;
+	border-bottom-left-radius: 0px;
+	-webkit-box-shadow: rgba(255, 255, 255, 0.246094) 1px 1px 1px inset, rgba(0, 0, 0, 0.496094) 0px 1px 2px;
+	box-shadow: rgba(255, 255, 255, 0.246094) 1px 1px 1px inset, rgba(0, 0, 0, 0.496094) 0px 1px 2px;
+	font-style: normal;
+	font-variant: normal;
+	font-weight: bold;
+	font-size: 14px;
+	font-family: Arial, sans-serif;
+	right: 0px;
+	z-index: 9999;
+	margin-top: -60px;
+	margin-right: 0px;
+	display: block;
+}
+
+.handle
+{
+	background-image: url(http://codebender.cc/images/indiegogo.png);
+	width: 32px;
+	height: 127px;
+	display: block;
+	text-indent: -99999px;
+	outline: none;
+	position: absolute;
+	top: 0%!important;
+	right: -32px;
+	background-position: initial initial;
+	background-repeat: no-repeat no-repeat;
+}
+#login_box
+{
+	background:#fff;
+	border-color: #DDD;
+	border-style: solid;
+	border-radius: 5px;
+	border-width: 1px;
+	padding: 10px;
+	top: 50px;
+	right:10px;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+	display:none;
+	position:absolute;
+	width:220px;
+}
+</style>
+
+		{% block javascripts_base %}{% endblock %}
+	    {% block javascripts %}{% endblock %}
+		{% block javascripts_upload_head %}{% endblock %}
+
+		<script type="text/javascript">
+		var mouse_is_inside = false;
+
+		$(document).ready(function() {
+		    $("#login_btn").click(function() {
+		        var loginBox = $("#login_box");
+		        if (loginBox.is(":visible"))
+		            loginBox.fadeOut("fast");
+		        else
+		            loginBox.fadeIn("fast");
+		        return false;
+		    });
+
+		    $("#login_box").hover(function(){
+		        mouse_is_inside=true;
+		    }, function(){
+		        mouse_is_inside=false;
+		    });
+
+		    $("body").click(function(){
+		        if(! mouse_is_inside) $("#login_box").fadeOut("fast");
+		    });
+
+			if($(".text-error").text() != "")
+				$("#login_box").fadeIn("fast");
+		});
+		</script>
+
+		<script type="text/javascript">
+
+		  var _gaq = _gaq || [];
+		  _gaq.push(['_setAccount', 'UA-36583501-1']);
+		  _gaq.push(['_setDomainName', 'codebender.cc']);
+		  _gaq.push(['_trackPageview']);
+
+		  (function() {
+		    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		  })();
+
+		</script>
+		<script>
+			$(document).ready(function() {
+
+				// Click event for any anchor tag that's href starts with #
+				$('a[href^="#off"]').click(function(event) {
+
+					// The id of the section we want to go to.
+					var id = $(this).attr("href");
+
+					// An offset to push the content down from the top.
+					var offset = 41;
+
+					// Our scroll target : the top position of the
+					// section that has the id referenced by our href.
+					var target = $(id).offset().top - offset;
+
+					// The magic...smooth scrollin' goodness.
+					$('html, body').animate({scrollTop:target}, 500);
+
+					//prevent the page from jumping down to our section.
+					event.preventDefault();
+				});
+			});
+		</script>
+    </head>
+    <body {% block body_options %}{% endblock %}>
+		<div class="navbar navbar-fixed-top">
+		  <div class="navbar-inner">
+		      <a class="brand" style="margin-left: 3px;" href="{{ path('AceGenericBundle_index')}}">
+			      <img id="logo_small" src="{{ asset("images/Codebender@2x.png") }}">
+			      {{ site_name }} (beta)
+		      </a>
+			  <ul class="nav">
+				  <li>
+					  <form class="navbar-search pull-left" action="{{ path('AceSearchBundle_find') }}"
+						 method="get">
+						  <input type="text" name="query" class="search-query" placeholder="Search">
+					  </form>
+				  </li>
+			  </ul>
+			  {% block examples %}
+			  {% endblock %}
+
+			  {% if not is_granted('ROLE_USER') %}
+				  <ul class="nav pull-right">
+					  <script type="text/javascript">
+						  function signuplink(){
+							  if ($("#offsignupnow").length > 0) {
+								  $('html, body').animate({scrollTop:$('#offsignupnow').offset().top - 41}, 500);
+							}else{
+								  $("#sign_up").attr("href", "/#offsignupnow");
+							  }
+						  }
+					  </script>
+					  <li id="signup">
+						  {#href="register" #}
+						  <a id="sign_up" href="javascript:void(0);" onclick="signuplink()">Sign Up</a>
+					  </li>
+					  <li id="login">
+						  <a href="javascript:void(0)" id="login_btn">Log In</a>
+					  </li>
+				  </ul>
+			  {% endif %}
+				{% if is_granted('ROLE_USER') %}
+				<ul class="nav pull-right">
+				    <li><a href="{{ path('fos_user_security_logout')}}" id="logout">Log Out</a></li>
+					{% render "AceUtilitiesBundle:Default:image" %}
+				</ul>
+				<p class="navbar-text pull-right">
+					Logged in as <a href="{{ path('AceUserBundle_options') }}">{{ app.user.username }}</a>
+				</p>
+				{% endif %}
+		  </div>
+		</div>
+        {% block body %}{% endblock %}
+
+		<div id="login_box" style="position: fixed;top: 50px;right:10px;">
+			{% render 'FOSUserBundle:Security:login' %}
+        </div>
+</body>
+
+<!-- begin uservoice code -->
+<script type="text/javascript">
+  var uvOptions = {};
+  (function() {
+    var uv = document.createElement('script'); uv.type = 'text/javascript'; uv.async = true;
+    uv.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'widget.uservoice.com/F9K3sHlqWGCRaHScnjWJ9g.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(uv, s);
+  })();
+</script>
+
+<!-- begin olark code --><script data-cfasync="false" type='text/javascript'>/*{literal}<![CDATA[*/
+window.olark||(function(c){var f=window,d=document,l=f.location.protocol=="https:"?"https:":"http:",z=c.name,r="load";var nt=function(){f[z]=function(){(a.s=a.s||[]).push(arguments)};var a=f[z]._={},q=c.methods.length;while(q--){(function(n){f[z][n]=function(){f[z]("call",n,arguments)}})(c.methods[q])}a.l=c.loader;a.i=nt;a.p={0:+new Date};a.P=function(u){a.p[u]=new Date-a.p[0]};function s(){a.P(r);f[z](r)}f.addEventListener?f.addEventListener(r,s,false):f.attachEvent("on"+r,s);var ld=function(){function p(hd){hd="head";return["<",hd,"></",hd,"><",i,' onl' + 'oad="var d=',g,";d.getElementsByTagName('head')[0].",j,"(d.",h,"('script')).",k,"='",l,"//",a.l,"'",'"',"></",i,">"].join("")}var i="body",m=d[i];if(!m){return setTimeout(ld,100)}a.P(1);var j="appendChild",h="createElement",k="src",n=d[h]("div"),v=n[j](d[h](z)),b=d[h]("iframe"),g="document",e="domain",o;n.style.display="none";m.insertBefore(n,m.firstChild).id=z;b.frameBorder="0";b.id=z+"-loader";if(/MSIE[ ]+6/.test(navigator.userAgent)){b.src="javascript:false"}b.allowTransparency="true";v[j](b);try{b.contentWindow[g].open()}catch(w){c[e]=d[e];o="javascript:var d="+g+".open();d.domain='"+d.domain+"';";b[k]=o+"void(0);"}try{var t=b.contentWindow[g];t.write(p());t.close()}catch(x){b[k]=o+'d.write("'+p().replace(/"/g,String.fromCharCode(92)+'"')+'");d.close();'}a.P(2)};ld()};nt()})({loader: "static.olark.com/jsclient/loader0.js",name:"olark",methods:["configure","extend","declare","identify"]});
+/* custom configuration goes here (www.olark.com/documentation) */
+olark.identify('7078-297-10-7791');/*]]>{/literal}*/</script><noscript><a href="https://www.olark.com/site/7078-297-10-7791/contact" title="Contact us" target="_blank">Questions? Feedback?</a> powered by <a href="http://www.olark.com?welcome" title="Olark live chat software">Olark live chat software</a></noscript><!-- end olark code -->
+
+
+
+{% block javascripts_upload_bottom %}{% endblock %}
+
+
+</html>

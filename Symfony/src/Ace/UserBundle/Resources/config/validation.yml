@@ -1,0 +1,15 @@
+Ace\UserBundle\Entity\User:
+    properties:
+        username:
+            - MinLength: { limit: 3, message: "Your Username needs to be at least {{ limit }} characters long." }
+        plainPassword:
+            - MinLength: { limit: 6, message: "Your Password needs to be at least {{ limit }} characters long." }
+            - MaxLength: { limit: 255, message: "Your Password cannot be longer than {{ limit }} characters." }
+            - Ace\UserBundle\Validator\Constraints\PasswordConstraint: ~                   
+
+FOS\UserBundle\Form\Model\ResetPassword:
+    properties:
+        new:
+            - MinLength: { limit: 6, message: "Your New Password needs to be at least {{ limit }} characters long." }
+            - MaxLength: { limit: 255, message: "Your New Password cannot be longer than {{ limit }} characters." }
+            - Ace\UserBundle\Validator\Constraints\PasswordConstraint: ~

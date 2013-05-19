@@ -1,0 +1,102 @@
+security:
+    # encoders:
+    #     Symfony\Component\Security\Core\User\User: plaintext
+    encoders:
+        "FOS\UserBundle\Model\UserInterface": sha512
+
+# #            algorithm: sha1
+# #            encode_as_base64: false
+# #            iterations: 1
+#         Ace\UserBundle\Entity\User:
+#             algorithm: sha1
+#             encode_as_base64: false
+#             iterations: 1
+# security:
+#     encoders:
+#         Ace\UserBundle\Entity\User:
+#             algorithm: plaintext
+
+    role_hierarchy:
+        ROLE_ADMIN:       ROLE_USER
+        ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+
+#    access_control:
+#        - { path: ^/list/*, roles: ROLE_USER }
+#        - { path: ^/edit/*, roles: ROLE_USER }
+#        - { path: ^/options/*, roles: ROLE_USER }
+#        - { path: ^/create/*, roles: ROLE_USER }
+#        - { path: ^/admin, roles: ROLE_ADMIN }
+
+    access_control:
+        - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/register$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+#        - { path: ^/register/*, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/list/*, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/users/options, roles: ROLE_USER }
+        - { path: ^/users/setoptions, roles: ROLE_USER }
+        - { path: ^/create/*, roles: ROLE_USER }
+        - { path: ^/static/info/points, roles: ROLE_USER }
+        - { path: ^/admin/, role: ROLE_ADMIN }
+
+
+    providers:
+#        administrators:
+#            entity: { class: AceUserBundle:User }
+#        
+        # main:
+        #     entity: { class: Ace\UserBundle\Entity\User, property: username }
+
+        # in_memory:
+        #     users:
+        #         user: { password: userpass, roles: [ 'ROLE_USER' ] }
+        #         tzikis: { password: qwerty, roles: [ 'ROLE_USER' ] }
+        #         admin: { password: adminpass, roles: [ 'ROLE_ADMIN' ] }
+
+        custom:
+            id: ace_user.experimental_provider
+
+        # fos_userbundle:
+            # id: fos_user.user_manager
+
+    firewalls:
+        dev:
+            pattern:  ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        login:
+            pattern:  ^/demo/secured/login$
+            security: false
+
+        # secured_area:
+        #     pattern:    ^/*
+        #     anonymous: ~
+        #     form_login:
+        #         login_path:  /login
+        #         check_path:  /login_check
+        #         default_target_path: /home
+        #     logout:
+        #         path:   /logout
+        #         target: /home
+        main:
+            pattern: ^/
+            form_login:
+                login_path: /
+                provider: custom
+                # provider: fos_userbundle
+                csrf_provider: form.csrf_provider
+            logout:
+                path: /logout
+            anonymous:    true
+            remember_me:
+                    key:      %mykey%
+                    lifetime: 31536000
+                    path:     /
+                    domain:   ~
+            #anonymous: ~
+            #http_basic:
+            #    realm: "Secured Demo Area"
+
+    # access_control:
+    #     - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
+    #     - { path: ^/_internal, roles: IS_AUTHENTICATED_ANONYMOUSLY, ip: 127.0.0.1 }

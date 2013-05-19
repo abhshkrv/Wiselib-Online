@@ -1,0 +1,38 @@
+{% extends 'AceStaticBundle:Walkthrough:skeleton.html.twig' %}
+
+{% block stylesheets %}
+	<style type="text/css">
+		.img-screenshot
+		{
+			margin-top: 10px;
+			margin-bottom: 10px;
+			border-radius: 5px;
+		}
+	</style>
+	{% include 'AceStaticBundle:Walkthrough:huge_button_style.html.twig' %}
+{% endblock %}
+
+{% block page_content %}
+	<h4>Ready. Set. Go!</h4>
+	<p>
+		Welcome to our Getting Started guide for new codebender users, and more importantly, new makers and Arduino
+		users. It will guide you through all the necessary steps, and to your first successfuly programmed device.
+		This process would normally take you about 15 to 45 minutes, but we'll get you set up in as fast as 2 minutes.
+	</p>
+	<h4 style="text-align: center">
+		Here's an elaborate explanation of how it works:
+	</h4>
+	<div class="row-fluid">
+		<div class="span4 offset4">
+			<a href="{{ asset("images/codebender_walkthrough.png") }}" rel="lightbox" title="codebender magic explained">
+				<img class="img-screenshot" src="{{ asset("images/codebender_walkthrough.png") }}">
+			</a>
+		</div>
+	</div>
+	<div class="row-fluid">
+		<div class="span4 offset4">
+			<h3 style="text-align: center">What are you waiting for?</h3>
+			<a class="huge-button" href="{{ path("AceStaticBundle_walkthrough", {"page":page+1}) }}">Feel the magic!</a>
+		</div>
+	</div>
+{% endblock %}

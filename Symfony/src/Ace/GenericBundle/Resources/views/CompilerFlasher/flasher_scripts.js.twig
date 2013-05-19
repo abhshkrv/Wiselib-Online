@@ -1,0 +1,463 @@
+	window.flashing_errors =
+	{
+		256:"Could not open serial port. Make sure you have selected the correct device and serial port."
+	};
+
+    function initializePlugin()
+    {
+        if (isMobile())
+        {
+            $("#plugin_div").hide();
+        }
+        else
+        {
+            var plugin_found = false;
+            //load it anyway on ie
+            if(navigator.userAgent.toLowerCase().indexOf('msie') == -1){
+                for (i = 0; i < navigator.plugins.length; i++)
+                    if (navigator.plugins[i].name == "Codebender.cc" || navigator.plugins[i].name == "Codebendercc")
+                        plugin_found = true;
+                if (!plugin_found)
+                {
+                    var alert = browserSpecificPluginInstall("You need to enable or install the Codebender Plugin. ");
+                    show_alert(alert, "alertupdatediv");
+                    return;
+                }
+            }
+            $("#plugin_div").html($("#plugin_div").html() + '<object id="plugin0" type="application/x-codebendercc" width="0" height="0" xmlns="http://www.w3.org/1999/html"></object>');
+
+            setTimeout(function(){
+                window.plugin = document.getElementById('plugin0');
+
+	            version = "1.5.4.16";
+	            if($("#cb_cf").data().pluginVersion)
+	                version = $("#cb_cf").data().pluginVersion;
+                validateVersion(version);
+            }, 100);
+        }
+
+    }
+
+    function parseVersionString(str) {
+        if (typeof(str) != 'string') {
+            return false;
+        }
+        var x = str.split('.');
+        // parse from string or default to 0 if can't parse
+        var maj = parseInt(x[0]) || 0;
+        var min = parseInt(x[1]) || 0;
+        var pat = parseInt(x[2]) || 0;
+        var bui = parseInt(x[3]) || 0;
+        return {
+            major:maj,
+            minor:min,
+            patch:pat,
+            build:bui
+        }
+    }
+
+    function comparePluginVersions(firstVersion, secondVersion)
+    {
+        var major = firstVersion.major - secondVersion.major;
+        var minor = firstVersion.minor - secondVersion.minor;
+        var patch = firstVersion.patch - secondVersion.patch;
+        var build = firstVersion.build - secondVersion.build;
+
+        if (major != 0) return major;
+        if (minor != 0) return minor;
+        if (patch != 0) return patch;
+        return build;
+    }
+
+    function validateVersion(version)
+    {
+        if (comparePluginVersions(parseVersionString(window.plugin.version), parseVersionString(version)) < 0)
+        {
+            var alert = browserSpecificPluginInstall("You need to update the Codebender Plugin. ");
+            show_alert(alert, "alertupdatediv");
+        } else if (window.plugin.version == null){
+            var alert = browserSpecificPluginInstall("You need to enable or install the Codebender Plugin. ");
+            show_alert(alert, "alertupdatediv");
+        } else
+            enableUSB();
+    }
+
+    function getbin(callback) {
+        $.get("{{ url('AceUtilitiesBundle_log', {'message':"flash"}) }}");
+
+        var payload = generate_payload("binary");
+        $.post("{{compiler}}", payload, function (data) {
+            var obj = jQuery.parseJSON(data);
+            callback(obj);
+        });
+    }
+
+
+    function usbflash(){
+        disconnect();
+
+        if (($("#ports").val() != null && $("#ports").val() != "") || typeof window.selectedBoard["upload"]["using"] === "string") {
+
+            setOperationProgress(50);
+
+            getbin(function (obj) {
+                if (obj.success == 0) {
+                    setOperationOutput("There was an error compiling.");
+	                if (typeof verification_onFail == 'function')
+		                verification_onFail(obj.message);
+
+                }
+                else {
+
+	                if (typeof verification_onSuccess == 'function')
+		                verification_onSuccess();
+
+	                if (parseInt(obj.size) > getMaxSize())
+                    {
+                        setOperationOutput("There is not enough space!");
+                        return;
+                    }
+
+                    binary = obj["output"];
+
+                    setOperationProgress(80);
+
+                    //this fixes the plugin crashing when no device is selected for DigiSpark etc
+                    var device = "COM0";
+                    if(typeof window.selectedBoard["upload"]["using"] === "undefined")
+                        device = portslist.options[portslist.selectedIndex].text;
+
+                    plugin.flash(device, binary, window.selectedBoard["upload"]["maximum_size"], window.selectedBoard["upload"]["protocol"], window.selectedBoard["upload"]["speed"], window.selectedBoard["build"]["mcu"],
+                            function (from, progress)
+                            {
+	                            if (progress)
+                                {
+	                                $("#uploadusb").addClass("btn-warning");
+
+	                                if(window.flashing_errors[progress])
+		                                setOperationOutput(window.flashing_errors[progress]+" <a href='https://codebender.uservoice.com/knowledgebase/articles/183395-usb-flashing-known-errors' target='_blank'>More Info</a>");
+	                                else
+	                                    setOperationOutput("There was an error uploading. Error #" + progress);
+                                } else
+                                {
+	                                $("#uploadusb").addClass("btn-success");
+
+	                                setOperationOutput("Upload successful");
+                                }
+
+	                            $("#upload_icon").addClass("icon-white");
+	                            window.setTimeout(function ()
+	                            {
+		                            $("#uploadusb").removeClass("btn-success").removeClass("btn-warning");
+		                            $("#upload_icon").removeClass("icon-white");
+	                            }, 500);
+
+                            });
+                }
+            });
+        }
+        else {
+            setOperationOutput("Please select a valid port or enable the plugin!!");
+        }
+    }
+
+
+    function browserSpecificPluginInstall(alert)
+    {
+        if(navigator.userAgent.toLowerCase().indexOf('chrome') != -1 && navigator.userAgent.toLowerCase().indexOf('nt 6.2') == -1)
+        {
+            alert += "<a href='https://chrome.google.com/webstore/detail/codebendercc-extension/fkjidelplakiboijmadcpcbpboihkmee' target='_blank'>Add to Chrome</a>";
+        }
+        else if(navigator.userAgent.toLowerCase().indexOf('firefox') != -1)
+        {
+            alert+= '<a id="xpi-download-url" href = "{{ 'http://' ~ app.request.host ~ asset('codebender.xpi') }}" >Add to Firefox.</a>';
+        }
+        else if(navigator.userAgent.toLowerCase().indexOf('msie') != -1 || navigator.userAgent.toLowerCase().indexOf('nt 6.2') != -1 )
+        {
+            alert+= '<a id="msi-download-url" href = "{{ 'http://' ~ app.request.host ~ asset('Codebendercc.msi') }}" >Add to Windows.</a>';
+        }
+        else
+        {
+            alert += "<a href='{{ url("AceStaticBundle_plugin") }}'>Learn More</a>.";
+        }
+        return alert;
+    }
+
+    function getFire() {
+
+        var ports = "";
+        try {
+            ports = plugin.probeUSB();
+            if (ports != oldPorts) {
+                $('#ports').find('option').remove();
+                portsAvail = ports.split(",");
+                for (var i = 0; i < portsAvail.length; i++) {
+                    if (portsAvail[i] != "") {
+                        portslist.options[i] = new Option(portsAvail[i], portsAvail[i], true, false);
+                    }
+                }
+
+                if(window.loaded_port != null)
+                    savePort(window.loaded_port);
+                oldPorts = ports;
+                loadPort();
+            }
+        }
+        catch (err) {
+            $('#ports').find('option').remove();
+            oldPorts = ports;
+        }
+        checkPermissions();
+    }
+
+
+    function enableUSB() {
+
+        window.connected = false;
+
+        window.portslist = $("#ports")[0];
+        window.oldPorts = "";
+
+        setTimeout(function () {
+            scan();
+        }, 200);
+
+        setTimeout(function () {
+            loadPort();
+        }, 500);
+    }
+
+    function savePort(port) {
+        new Lawnchair(function () {
+            if(port === undefined)
+                port = $("#ports option:selected").text();
+
+            this.save({key:'port', name:port});
+        });
+        checkPermissions();
+    }
+
+    function loadPort() {
+        Lawnchair(function () {
+            this.exists('port', function (exists) {
+                if (exists) {
+                    this.get('port', function (config) {
+                        $("#ports").val(config.name);
+                        window.loaded_port = config.name;
+                    })
+
+                }
+            });
+        });
+    }
+
+    function checkPermissions() {
+        if ((navigator.appVersion.indexOf("X11") != -1) || (navigator.appVersion.indexOf("Linux") != -1)) {
+            var group = window.plugin.checkPermissions($("#ports option:selected").text());
+            if (group != "") {
+                var message = "<small>You do not have the required <span style=\"color:red\">permissions<\/span> to communicate with Arduino Devices. To fix this add yourself to the <span style=\"color:red\">" + group.replace('\n', '') + "<\/span> group running \"<span style=\"color:red\">gpasswd -a username " + group.replace('\n', '') + " <\/span>\" with root permissions. Then <span style=\"color:red\">log-out<\/span> and <span style=\"color:red\">log-in<\/span> again from your computer to reload user permissions.</small>";
+                show_alert(message);
+            }
+        } else if (navigator.appVersion.indexOf("MSIE") != -1 ){
+            var protectedModeEnabled = window.plugin.checkPermissions("");
+            if (protectedModeEnabled == "1"){
+                var message = "<small>You need to disable the <span style=\"color:red\">Protected Mode</span> to communicate with Arduino Devices. <a target=\"_blank\" href=\"https://codebender.uservoice.com/knowledgebase/articles/188530-running-the-codebender-plugin-on-internet-explorer\">Learn More</a></small>";
+                show_alert(message);
+            }
+        }
+    }
+
+    function scan() {
+
+        window.hasPerm = window.plugin.setCallback(function (from, output) {
+            if (output == "disconnect") {
+                disconnect();
+            } else
+            {
+                if (output == "Could not auto-reset or detect a manual reset!")
+                    $.get("{{ url('AceUtilitiesBundle_log', {'message':"programmer: leonardo didn't reset"}) }}");
+                else
+                    $.get("{{ url('AceUtilitiesBundle_log', {'message':"programmer: unkown error"}) }}"); //todo find a way to send the output
+                setOperationOutput(output);
+            }
+        });
+
+        if (!window.hasPerm) {
+            show_alert("You need to grant permissions to the Codebender extension.", "permissions_alert");
+        }
+
+
+        getFire();
+        setInterval(function () {
+            getFire();
+        }, 1000);
+    }
+
+    function show_alert(message, divname) {
+        alertElement = "<div id='";
+        alertElement += divname;
+        alertElement += "' class='alert'>";
+//        alertElement += "<button type='button' class='close' data-dismiss='alert'>x</button>";
+        alertElement += message
+        alertElement += "</div>";
+        $("#plugin_div").html(alertElement);
+    }
+
+    //Device check function
+    function isMobile() {
+
+        return navigator.userAgent.match(/Android/i) ? true : false
+                || navigator.userAgent.match(/BlackBerry/i) ? true : false
+                || navigator.userAgent.match(/iPhone|iPad|iPod/i) ? true : false
+                || navigator.userAgent.match(/IEMobile/i) ? true : false;
+    }
+
+    /*
+    Serial Monitor functions
+     */
+    function connect() {
+        speed = $("#baudrates option:selected").val();
+        if (window.connected == false) {
+            if ($("#ports").val() != null && $("#ports").val() != "") {
+                $("#serial_monitor_content").show(1000);
+                window.connected = true;
+                $("#toggle_connect_serial").html("Disconnect").attr("onClick", "disconnect();");
+                $("#serial_hud").html("");
+                window.plugin.serialRead(
+                    portslist.options[portslist.selectedIndex].text,
+                    speed,
+                    function (from, line) {
+                        serialHudAppend(line);
+                    }
+                );
+            }
+            else {
+                setOperationOutput("Please select a valid port or enable the plugin!!");
+            }
+        } else {
+            disconnect();
+        }
+    }
+
+
+    function disconnect() {
+        if (window.connected == true) {
+            $("#toggle_connect_serial").html("<i class='icon-list-alt'></i> Open Serial Monitor").attr("onClick", "connect();");
+            window.connected = false;
+            window.plugin.disconnect();
+            $("#serial_monitor_content").hide(1000);
+        }
+    }
+
+    function serialHudAppend(line) {
+    if (isNaN(line)) {
+        serialHudWrite($("#serial_hud").html() + line + "<br>");
+    } else {
+        if (line == "13")    return;
+        if (line == "10")    serialHudWrite($("#serial_hud").html() + "<br>");
+        if (line != "10")    serialHudWrite($("#serial_hud").html() + String.fromCharCode(line));
+    }
+}
+
+    function serialHudWrite(message) {
+        $("#serial_hud").html(message);
+        $("#serial_hud").scrollTo(99999999);
+    }
+
+    function serialSendOnEnter(event){
+        e = window.event;   // resolve event instance
+        if (e.keyCode == '13'){
+        serialSend();
+        }else if (e.keyCode == '10'){
+        serialSend();
+        }
+    }
+
+    function serialSend() {
+        window.plugin.serialWrite($("#text2send").val());
+    }
+
+
+    //Scrolling function
+    (function ($) {
+        var h = $.scrollTo = function (a, b, c) {
+            $(window).scrollTo(a, b, c)
+        };
+        h.defaults = {axis:'xy', duration:parseFloat($.fn.jquery) >= 1.3 ? 0 : 1, limit:true};
+        h.window = function (a) {
+            return $(window)._scrollable()
+        };
+        $.fn._scrollable = function () {
+            return this.map(function () {
+                var a = this, isWin = !a.nodeName || $.inArray(a.nodeName.toLowerCase(), ['iframe', '#document', 'html', 'body']) != -1;
+                if (!isWin)return a;
+                var b = (a.contentWindow || a).document || a.ownerDocument || a;
+                return/webkit/i.test(navigator.userAgent) || b.compatMode == 'BackCo    mpat' ? b.body : b.documentElement
+            })
+        };
+        $.fn.scrollTo = function (e, f, g) {
+            if (typeof f == 'object') {
+                g = f;
+                f = 0
+            }
+            if (typeof g == 'function')g = {onAfter:g};
+            if (e == 'max')e = 9e9;
+            g = $.extend({}, h.defaults, g);
+            f = f || g.duration;
+            g.queue = g.queue && g.axis.length > 1;
+            if (g.queue)f /= 2;
+            g.offset = both(g.offset);
+            g.over = both(g.over);
+            return this._scrollable().each(function () {
+                if (e == null)return;
+                var d = this, $elem = $(d), targ = e, toff, attr = {}, win = $elem.is('html,body');
+                switch (typeof targ) {
+                    case'number':
+                    case'string':
+                        if (/^([+-]=)?\d+(\.\d+)?(px|%)?$/.test(targ)) {
+                            targ = both(targ);
+                            break
+                        }
+                        targ = $(targ, this);
+                        if (!targ.length)return;
+                    case'object':
+                        if (targ.is || targ.style)toff = (targ = $(targ)).offset()
+                }
+                $.each(g.axis.split(''), function (i, a) {
+                    var b = a == 'x' ? 'Left' : 'Top', pos = b.toLowerCase(), key = 'scroll' + b, old = d[key], max = h.max(d, a);
+                    if (toff) {
+                        attr[key] = toff[pos] + (win ? 0 : old - $elem.offset()[pos]);
+                        if (g.margin) {
+                            attr[key] -= parseInt(targ.css('margin' + b)) || 0;
+                            attr[key] -= parseInt(targ.css('border' + b + 'Width')) || 0
+                        }
+                        attr[key] += g.offset[pos] || 0;
+                        if (g.over[pos])attr[key] += targ[a == 'x' ? 'width' : 'height']() * g.over[pos]
+                    } else {
+                        var c = targ[pos];
+                        attr[key] = c.slice && c.slice(-1) == '%' ? parseFloat(c) / 100 * max : c
+                    }
+                    if (g.limit && /^\d+$/.test(attr[key]))attr[key] = attr[key] <= 0 ? 0 : Math.min(attr[key], max);
+                    if (!i && g.queue) {
+                        if (old != attr[key])animate(g.onAfterFirst);
+                        delete attr[key]
+                    }
+                });
+                animate(g.onAfter);
+                function animate(a) {
+                    $elem.animate(attr, f, g.easing, a && function () {
+                        a.call(this, e, g)
+                    })
+                }
+            }).end()
+        };
+        h.max = function (a, b) {
+            var c = b == 'x' ? 'Width' : 'Height', scroll = 'scroll' + c;
+            if (!$(a).is('html,body'))return a[scroll] - $(a)[c.toLowerCase()]();
+            var d = 'client' + c, html = a.ownerDocument.documentElement, body = a.ownerDocument.body;
+            return Math.max(html[scroll], body[scroll]) - Math.min(html[d], body[d])
+        };
+        function both(a) {
+            return typeof a == 'object' ? a : {top:a, left:a}
+        }
+    })(jQuery);

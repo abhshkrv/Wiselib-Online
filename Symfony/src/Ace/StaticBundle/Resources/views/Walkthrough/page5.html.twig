@@ -1,0 +1,31 @@
+{% extends 'AceStaticBundle:Walkthrough:skeleton.html.twig' %}
+
+{% block stylesheets %}
+	{% include 'AceStaticBundle:Walkthrough:huge_button_style.html.twig' %}
+{% endblock %}
+
+{% block page_content %}
+
+	<h3>Congratulations!</h3>
+	<p>
+		Congratulations, you just completed the getting started guide successfuly! We just saved you about
+		<strong>30 minutes</strong> of set up and configuration. How does that feel?
+	</p>
+	<p>
+		You can now check out the code you previously loaded and understand how it works. Welcome to the wonderful world
+		of the Arduino. Join your fellow makers, and start changing the world!
+	</p>
+
+	<h4>Arduino Code</h4>
+	<p>This is the code that was loaded if you selected any Arduino-compatible device.</p>
+	<iframe style="height: 510px; width: 100%; margin: 10px 0 10px;" allowTransparency="true" src="http://codebender.cc/embed/sketch:8283" frameborder="0"></iframe>
+	<h4>Digispark Code</h4>
+	<p>This is the code that was loaded if you selected a Digispark.</p>
+	<iframe style="height: 510px; width: 100%; margin: 10px 0 10px;" allowTransparency="true" src="http://codebender.cc/embed/sketch:8285" frameborder="0"></iframe>
+	{% if not is_granted('ROLE_USER') %}
+		<hr class="soften">
+		<h4>Get a codebender account to code, flash your device and share your work online.</h4>
+		{% render 'ace_user.usercontroller:inlineRegisterAction' %}
+	{% endif %}
+
+{% endblock %}

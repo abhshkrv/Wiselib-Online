@@ -1,0 +1,7 @@
+parameters:
+#    ace_static.example.class: Ace\StaticBundle\Example
+
+services:
+#    ace_static.example:
+#        class: %ace_static.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

@@ -1,0 +1,106 @@
+{% extends '::container.html.twig' %}
+{% block title %}
+{{ site_name }} blog 
+{% endblock %}
+
+{% if is_granted('ROLE_ADMIN') %}		      
+	{% block stylesheets %}
+	<!-- Skin CSS file -->
+	<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.9.0/build/assets/skins/sam/skin.css">
+	{% endblock %}
+	
+	
+	{% block javascripts %}
+	<!-- Utility Dependencies -->
+	<script src="http://yui.yahooapis.com/2.9.0/build/yahoo-dom-event/yahoo-dom-event.js"></script> 
+	<script src="http://yui.yahooapis.com/2.9.0/build/element/element-min.js"></script> 
+	<!-- Needed for Menus, Buttons and Overlays used in the Toolbar -->
+	<script src="http://yui.yahooapis.com/2.9.0/build/container/container_core-min.js"></script>
+	<script src="http://yui.yahooapis.com/2.9.0/build/menu/menu-min.js"></script>
+	<script src="http://yui.yahooapis.com/2.9.0/build/button/button-min.js"></script>
+	<!-- Source file for Rich Text Editor-->
+	<script src="http://yui.yahooapis.com/2.9.0/build/editor/editor-min.js"></script>
+
+	<script type="text/javascript">
+	$(document).ready(function()
+	{	
+	
+		var myEditor = new YAHOO.widget.Editor('msgpost',
+		{
+			autoHeight: true,
+		    height: '300px',
+		    width: '100%',
+			handleSubmit:true,
+		    ptags: true,
+		    dompath: true, //Turns on the bar at the bottom
+		    animate: true //Animates the opening, closing and moving of Editor windows
+		});
+		myEditor.render();
+	});
+	</script>
+
+	{% endblock %}
+{% endif %}
+
+
+{% block mainspan %}
+<div class="page-header">
+  <h1>ze blog
+	<small> our latest news</small>
+	<a href={{path("AceBlogBundle_rss")}}>
+	<img src={{asset("images/rss.png")}} style="
+	    float: right;
+	    height: 25px;
+	    padding: 10px 10px 10px 10px;">
+	</a>
+	</h1>
+</div>
+
+{% if is_granted('ROLE_ADMIN') %}		      
+<div class="accordion" id="accordion">
+	<div class="accordion-group">
+		<div class="accordion-heading">
+			<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+			New Post!
+			</a>
+		</div>
+		<div id="collapseOne" class="accordion-body collapse">
+			<div class="accordion-inner yui-skin-sam">
+				<form action = "{{ path('AceBlogBundle_newpost')}}">
+				Title: <input type="text" name="title" style="width:94.9%"/>
+				<textarea name="msgpost" id="msgpost"></textarea>
+				<button type="submit">New Post!</button>
+				</form>
+		</div>
+		</div>
+	</div>
+</div>
+{% endif %}
+
+<div id="posts">
+  {% for i in posts %}
+  <div class="row-fluid">
+	<div class="span12">
+	
+	<a href={{path("AceBlogBundle_viewpost", {'id': i.id})}} >
+	<h3>{{ i.title }}</h3>
+	</a>
+		<h3><small>{{ i.date|date("M jS, Y") }}</small></h3>
+		{{ i.text|raw }}
+	</div>
+  </div>
+{% endfor %}
+
+  <div class="pagination pagination-centered">
+     <ul>
+       <li {% if page == 1 %} class="disabled" {% endif %}><a {% if page != 1 %} href={{path("AceBlogBundle_blog", {'page': page - 1 } )}} {% endif %} >Previous</a></li>
+	   {% for i in 1..pages %}
+       <li {% if loop.index0 == page - 1 %} class="active" {% endif %}><a {% if loop.index0 != page - 1 %} href={{path("AceBlogBundle_blog", {'page': loop.index0 + 1 })}} {% endif %} >{{i}}</a></li> 
+	   {% endfor %}
+       <li {% if (pages-1) == page - 1 %} class="disabled" {% endif %} ><a {% if (pages-1) != page - 1 %} href={{path("AceBlogBundle_blog", {'page': page + 1 } )}} {% endif %}>Next</a></li>
+     </ul>
+  </div>
+
+</div>
+
+{% endblock %}

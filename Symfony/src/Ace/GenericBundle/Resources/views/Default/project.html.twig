@@ -1,0 +1,42 @@
+{% extends '::container.html.twig' %}
+{% block title "Project Info" %}
+
+{% block javascripts %}
+{% endblock %}
+
+{% block body_options %} onload="prettyPrint()"{% endblock %}
+{% block mainspan %}
+	<div class="page-header row-fluid" >
+		<h1>
+			Codebender Project
+			{% if parent is not null %}
+				<small style="float: right; display: inline-block;">
+					cloned from
+					<a href="{{ path("AceGenericBundle_project", {"id":parent["id"]}) }}">
+						{{ parent["owner"] }}/{{ parent["name"] }}
+					</a>
+				</small>
+			{% endif %}
+		</h1>
+		{#
+				<h1>{{ project_name }}<small>By <a href="{{path('AceGenericBundle_user',{'user':owner['username'] })}}">{{ owner['username'] }}</a> ({{owner['firstname']}} {{owner['lastname']}})</small></h1>
+		#}
+	</div>
+
+	<div class="row-fluid">
+
+        {% include 'AceGenericBundle:Default:project_wrapper.html.twig' %}
+
+		<h5>Description: </h5>
+		{% render "AceUtilitiesBundle:Default:getDescription" with {'id': project_id} %}
+
+		<br />
+		<hr class="soften">
+
+		<div class="row-fluid">
+            <h3>Embeddable code</h3>
+            <p>Use the following code to embed this sketch in your blog or website.</p>
+            {% include 'AceGenericBundle:Default:project_embeddable_code.html.twig' with {'project_id': project_id}%}
+        </div>
+
+{% endblock %}

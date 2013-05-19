@@ -1,0 +1,17 @@
+AceBlogBundle_blog:
+   pattern:  /{page}
+   defaults: { _controller: AceBlogBundle:Default:blog, page: "1" } 
+   requirements:
+       page:   \d+
+
+AceBlogBundle_rss:
+    pattern:  /rss
+    defaults: { _controller: AceBlogBundle:Default:rss }
+
+AceBlogBundle_newpost:
+    pattern:  /newpost
+    defaults: { _controller: AceBlogBundle:Default:newpost }
+
+AceBlogBundle_viewpost:
+    pattern:  /viewpost/{id}
+    defaults: { _controller: AceBlogBundle:Default:viewpost, id: "0" }

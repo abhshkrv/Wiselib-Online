@@ -1,0 +1,11 @@
+parameters:
+#    ace_owner.example.class: Ace\OwnerBundle\Example
+
+services:
+#    ace_owner.example:
+#        class: %ace_owner.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]
+    ace_owner.ownercontroller:
+        class:        Ace\OwnerBundle\Controller\DefaultController
+        arguments:
+            entityManager: "@doctrine.orm.entity_manager"

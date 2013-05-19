@@ -1,0 +1,11 @@
+Symfony/app/cache
+Symfony/app/logs
+*~
+.DS_Store
+vendor/codebendercc/arduino-files/.git
+Symfony/app/phpunit.xml
+Symfony/jlog.xml
+Symfony/app/config/parameters.ini
+Symfony/web/update.rdf
+.idea/workspace.xml
+

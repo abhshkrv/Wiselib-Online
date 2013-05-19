@@ -1,0 +1,47 @@
+AceStaticBundle_about:
+    pattern:  /about
+    defaults: { _controller: AceStaticBundle:Default:about }
+
+AceStaticBundle_tech:
+    pattern:  /tech
+    defaults: { _controller: AceStaticBundle:Default:tech }
+
+AceStaticBundle_team:
+    pattern:  /team
+    defaults: { _controller: AceStaticBundle:Default:team }
+
+AceStaticBundle_tutorials:
+    pattern:  /tutorials
+    defaults: { _controller: AceStaticBundle:Default:tutorials }
+
+AceStaticBundle_walkthrough:
+    pattern:  /walkthrough/page/{page}
+    defaults: { _controller: AceStaticBundle:Default:walkthrough }
+
+AceStaticBundle_contact:
+    pattern:  /contact
+    defaults: { _controller: AceStaticBundle:Default:contact }
+
+AceStaticBundle_contact_new:
+    pattern:  /contact_new
+    defaults: { _controller: AceStaticBundle:Default:contact }
+
+AceStaticBundle_notify:
+    pattern:  /notify
+    defaults: { _controller: AceStaticBundle:Default:notify }
+
+AceStaticBundle_plugin:
+    pattern:  /plugin
+    defaults: { _controller: AceStaticBundle:Default:plugin }
+
+AceStaticBundle_partner:
+    pattern:  /partner/{name}
+    defaults: { _controller: AceStaticBundle:Default:partner }
+
+AceStaticBundle_info_points:
+    pattern:  /info/points
+    defaults: { _controller: AceStaticBundle:Default:infoPoints }
+
+AceStaticBundle_info_karma:
+    pattern:  /info/karma
+    defaults: { _controller: AceStaticBundle:Default:infoKarma }

@@ -1,0 +1,24 @@
+{% extends '::container.html.twig' %}
+{% block title %}
+{{ site_name }} boards
+{% endblock %}
+{% block mainspan %}
+<h1>{{ site_name }} boards<small> le board support</small></h1>
+<div class="marketing">
+	<p>We are working really hard on building a great tool for developers. For us, that includes supporting as many different boards and platforms as possible. You can find a list of all the currently supported boards below.</p>
+	<hr class="soften">
+
+	{% for board in boards %}
+	    <h4>{{board["name"]}}</h4>
+		<p>{{board["description"]}}</p>
+	{% endfor %}
+
+	<div class="row-fluid">
+		<h2>Request Board</h2>
+		<p>The above list is by no means complete. It consists of boards we use often and boards that someone requested. If you would like us to include a <strong>commonly-used</strong> board, please send us an email at girder at codebender dot cc with the subject "Please support the following board", and we will do our best to include it as soon as possible if we find that it has value for other users as well. Thank you for your understanding. We hope you appreciate our hard work.</p>
+		<hr class="soften">
+	</div>
+	<hr class="soften">
+</div>
+{% endblock %}
+

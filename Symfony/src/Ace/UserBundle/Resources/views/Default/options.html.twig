@@ -1,0 +1,372 @@
+{% extends '::container.html.twig' %}
+{% block title "Account Options" %}
+
+{% block stylesheets %}
+    <!-- used to fix temporarily icons-textfields alignment bug in bootstrap 2.2.0 -->
+    <style type="text/css">
+	    .input-prepend
+	    {
+		    width: 100%;
+	    }
+
+	    .option-form-input
+	    {
+		    width: 80%;
+		    width: -moz-calc(100% - 50px);
+		    width: -webkit-calc(100% - 50px);
+		    width: calc(100% - 50px);
+	    }
+
+        .input-prepend .add-on, .input-prepend .btn {
+            margin-right: -4px;
+            /*	margin-bottom: 9px;*/
+        }
+
+        .input-append, .input-prepend {
+            font-size: 12px;
+            white-space: normal;
+        }
+    </style>
+{% endblock %}
+
+{% block javascripts %}
+    <script src={{ asset("validation/passvalidation.js") }} type="text/javascript"></script>
+    <script type="text/javascript" charset="utf-8">
+
+	function preCheck(id) {
+		if(id == "options_currentPassword"){
+			var len = $("#" + id).val().length;
+			if (len != 0) {
+				if (len > 5 && len < 255){ //reduce validation overhead
+					$(".currentPassword-info").html('');
+					if (passvalid(id) == 1) {
+						$(".currentPassword").removeClass("error").removeClass("success").addClass("warning");
+						$(".password_old").removeClass("icon-remove").removeClass("icon-exclamation-sign").removeClass("icon-ok").addClass("icon-question-sign");
+						$(".currentPassword-info").html('<i>Valid, type your Password and press Tab key</i>');
+						//setInterval(validation(id),100000);
+					}
+					else
+						$(".currentPassword-info").html('<i>Sorry, the Password you typed is not correct, give it another try</i>');
+				}
+				else{
+					$(".currentPassword").removeClass("warning").removeClass("success").addClass("error");
+					$(".password_old").removeClass("icon-exclamation-sign").removeClass("icon-question-sign").removeClass("icon-ok").addClass("icon-remove");
+					$(".currentPassword-info").html('<i>Sorry, Password needs to be at least 6 characters long</i>');
+				}
+			}
+			else{
+				$(".currentPassword").removeClass("error").removeClass("success").removeClass("warning");
+				$(".password_old").removeClass("icon-remove").removeClass("icon-question-sign").removeClass("icon-ok").addClass("icon-exclamation-sign");
+				$(".currentPassword-info").html('');
+			}
+		}
+		
+		if(id == "options_email"){
+			if ($("#" + id).val().length > 6){
+				if (emailReg.test($("#" + id).val())) {
+					$(".mail").removeClass("error").removeClass("success").addClass("warning");
+                    $(".mail-icon").removeClass("icon-remove").removeClass("icon-envelope").removeClass("icon-question-sign").removeClass("icon-ok").addClass("icon-question-sign");
+                    $(".email-info").html('<i>Valid, type your Email and press Tab key</i>');
+				}
+				else{
+					$(".mail").removeClass("success").addClass("error");
+					$(".mail-icon").removeClass("icon-ok").removeClass("icon-envelope").removeClass("icon-question-sign").addClass("icon-remove");
+					$(".email-info").html('<i>Sorry, this is an invalid email address</i>');
+				}
+			}
+			else{
+				$(".mail").removeClass("error").removeClass("success");
+				$(".mail-icon").removeClass("icon-remove").removeClass("icon-ok").removeClass("icon-question-sign").addClass("icon-envelope");
+				$(".email-info").html('');
+			}
+		}
+		
+	}
+
+    function validation(id) {
+        if (id == "options_plainPassword_new" || id == "options_plainPassword_confirm") {
+            var s = passvalid("options_plainPassword_new");
+
+            if (s == 1) //options_plainPassword_new valid
+            {
+                //options_plainPassword_new set OK
+                $(".password_signs").removeClass("icon-exclamation-sign").removeClass("icon-remove").addClass("icon-ok");
+                $(".plainPassword-info").html('');
+
+                if ($("#options_plainPassword_new").val() == $("#options_plainPassword_confirm").val()) //passwords match
+                {
+                    //options_plainPassword_confirm set OK
+                    $(".passwords").removeClass("error").addClass("success");
+                    $(".password_confirm").removeClass("icon-exclamation-sign").removeClass("icon-remove").addClass("icon-ok");
+                    $(".plainPassword-info").html('');
+                }
+                else {
+                    if ($("#options_plainPassword_confirm").val().length != 0) {
+                        //options_plainPassword_confirm != options_plainPassword_new, options_plainPassword_confirm set to error
+                        $(".passwords").removeClass("success").addClass("error");
+                        $(".password_confirm").removeClass("icon-exclamation-sign").removeClass("icon-ok").addClass("icon-remove");
+                        $(".plainPassword-info").html('<i>Sorry, Passwords do not match!</i>');
+                    }
+                }
+            }
+            else if (s == 2) //options_plainPassword_new is empty
+            {
+                //bring options_plainPassword_new to normal
+                $(".password_signs").removeClass("icon-ok").removeClass("icon-remove").addClass("icon-exclamation-sign");
+                $(".plainPassword-info").html('');
+
+                if ($("#options_plainPassword_new").val() == $("#options_plainPassword_confirm").val()) //both empty
+                {
+                    //bring options_plainPassword_confirm to normal
+                    $(".passwords").removeClass("error").removeClass("success");
+                    $(".password_confirm").removeClass("icon-ok").removeClass("icon-remove").addClass("icon-exclamation-sign");
+                    $(".plainPassword-info").html('');
+                }
+                else    //options_plainPassword_confirm not empty
+                {
+                    //set options_plainPassword_confirm to error
+                    $(".passwords").removeClass("success").addClass("error");
+                    $(".password_signs, .password_confirm").removeClass("icon-exclamation-sign").removeClass("icon-ok").addClass("icon-remove");
+                    $(".plainPassword-info").html('<i>Sorry, Passwords do not match!</i>');
+                }
+            }
+            else //options_plainPassword_new not in range or not enough charsets
+            {
+                //set passwords to error
+                $(".passwords").removeClass("success").addClass("error");
+                $(".password_signs, .password_confirm").removeClass("icon-exclamation-sign").removeClass("icon-ok").addClass("icon-remove");
+
+                if (s == 3)
+                    $(".plainPassword-info").html('<i>Sorry, your Password needs to be at least 6 characters long</i>');
+                else
+                    $(".plainPassword-info").html('<i>Sorry, your New Password is too simple, try mix and matching Letters, Numbers or Symbols, to make it more secure.</i>');
+
+               // $(".plainPassword-info").html('');
+            }
+        }
+
+        else if (id == "options_currentPassword") {
+            if ($("#" + id).val().length != 0) {
+                $(".currentPassword").removeClass("error").removeClass("success").addClass("warning");
+                $(".password_old").removeClass("icon-remove").removeClass("icon-exclamation-sign").removeClass("icon-ok").addClass("icon-question-sign");
+                $(".currentPassword-info").html('<i>Checking Password</i>');
+                $.post("{{ url('AceUserBundle_iscurrentpassword') }}", { currentPassword:$("#" + id).val() },
+                        function (response) {
+                            if (response.valid) {
+                                $(".currentPassword").removeClass("warning").addClass("success");
+                                $(".password_old").removeClass("icon-question-sign").addClass("icon-ok");
+                                $(".currentPassword-info").html('');
+                            }
+                            else {
+                                $(".currentPassword").removeClass("warning").removeClass("success").addClass("error");
+                                $(".password_old").removeClass("icon-question-sign").removeClass("icon-ok").addClass("icon-remove");
+                                $(".currentPassword-info").html('<i>Sorry, this is not your Current Password, give it another try</i>');
+                            }
+                        }).error(function () {
+                            alert("error");
+                        });
+            }
+        }
+		
+		else if (id == "options_email"){ //using type="email" instead
+			var value = ($("#" + id)).val();
+            if (((value).length > 6) && (emailReg.test(value)) ) {
+				$(".mail").removeClass("error")
+						  .removeClass("success");
+				$(".mail-icon").removeClass("icon-remove")
+							   .removeClass("icon-ok")
+							   .removeClass("icon-question-sign")
+							   .addClass("icon-envelope");
+				$(".email-info").html('');
+				
+				$.post("{{ url('AceUserBundle_isemailavailable') }}", { email:value },
+				function (response) {
+					if (response.valid == "available") {
+						$(".mail").addClass("success");
+						$(".mail-icon").addClass("icon-ok");
+						$(".email-info").html('');
+					}
+					else if (response.valid == "inUse") {
+						$(".mail").addClass("error");
+						$(".mail-icon").addClass("icon-remove");
+						$(".email-info").html('<i>Sorry, this E-mail is already in use by another member</i>');
+					}
+					else { //response.valid == "own"
+						//$(".mail").removeClass("error").removeClass("success");
+						$(".mail-icon").addClass("icon-envelope");
+						$(".email-info").html('');
+					}
+				});
+			}
+        }
+
+        else {
+        }
+
+    }
+    </script>
+
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function () {
+			$("#loading").hide();
+            $("#modify").click(function (e) {
+				e.preventDefault();
+				$("#loading").show();
+                $.post("{{ url('AceUserBundle_options') }}", $('#options_form').serializeArray(),
+                function (response) {
+					$("#loading").hide();
+					var response = $.parseJSON(response);
+					if(response.success){
+							$(".help-block").html('');
+							$(".control-group").removeClass("error");
+					}
+					else{
+						$.each( response, function(field,info){
+							if((field != "message") && (field != "success")){
+								$("." + field + "-info").html("<i class=\"icon-exclamation-sign \"></i> <i>"+info[0]+"</i>");
+								$($("#options_" + field)).closest('.control-group').addClass("error");
+							}		
+						});
+					}
+					$(".update-info").html(response.message).show().delay(10000).fadeOut();   
+				});
+            });
+        });
+
+    </script>
+
+{% endblock %}
+
+{% block mainspan %}
+    <h2>
+	    User Account Options
+	    <a href="{{ path("AceStaticBundle_info_points") }}">
+		    {% include "AceUtilitiesBundle:Default:codebender_points.html.twig" with {"points": user.getPoints} %}
+	    </a>
+	    <a href="{{ path("AceStaticBundle_info_karma") }}">
+		    {% include "AceUtilitiesBundle:Default:codebender_karma.html.twig" with {"karma": user.getKarma} %}
+	    </a>
+    </h2>
+    <h5> Change your personal information, then click 'Save Changes' to update your profile.</h5>
+    <hr />
+    <div class="row-fluid">
+        <div class="span3">
+            <ul class="thumbnails">
+                <li>
+                    <a href="http://www.gravatar.com" target="_blank" class="thumbnail">
+                        <img id="user_avatar" src="{{ image }}" alt="avatar of user"/>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="span9">
+            <label><strong>Avatar</strong></label>
+            <p>We are using Gravatar to power your avatars. Gravatar is a great service that stores your avatar and
+                allows you to reuse it on multiple websites across the web! To change your avatar, just click on it,
+                and you will be taken to www.gravatar.com. Then login or register with the same email you use for
+                {{ site_name }}, and upload an image. That's it, you're set!</p>
+        </div>
+    </div>
+
+	{% form_theme form 'AceUserBundle:Form:labels.html.twig' %}
+    <form name="form" id="options_form" action="{{ path('AceUserBundle_options') }}" method="POST">
+    <div class="row-fluid">
+        <div class="span4">
+            <div class="control-group">
+                {{ form_label(form.username) }}
+                <div class="controls">
+                    <div class="input-prepend">
+                        <span class="add-on"><i class="icon-user"></i></span>
+                        {{ form_widget(form.username) }}
+                         <span class="help-block"></span><!--used only for spacing-->
+                    </div>
+                </div>
+            </div>
+            <div class="control-group">
+                {{ form_label(form.firstname) }}
+                <div class="controls">
+                    <div class="input-prepend">
+                        <span class="add-on"><i class="icon-user"></i></span>
+                        {{ form_widget(form.firstname) }}
+                        <span class="help-block firstname-info">{{ form_errors(form.firstname) }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="control-group">
+                {{ form_label(form.lastname) }}
+                <div class="controls">
+                    <div class="input-prepend">
+                        <span class="add-on"><i class="icon-user"></i></span>
+                        {{ form_widget(form.lastname) }}
+                        <span class="help-block lastname-info">{{ form_errors(form.lastname) }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="span4">
+            <div class="mail control-group">
+                {{ form_label(form.email) }}
+                <div class="controls">
+                    <div class="input-prepend">
+                        <span class="add-on"><i class="icon-envelope mail-icon"></i></span>
+							{{ form_widget(form.email) }}
+                        <span class="help-block email-info">{{ form_errors(form.email) }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="control-group">
+                {{ form_label(form.twitter) }}
+                <div class="controls">
+                    <div class="input-prepend">
+                        <span class="add-on">@</span>
+                        {{ form_widget(form.twitter) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="span4">
+			<div class="currentPassword control-group">
+                {{ form_label(form.currentPassword) }}
+                <div class="controls">
+                    <div class="input-prepend">
+                        <span class="add-on"><i class="icon-exclamation-sign password_old"></i></span>
+                        {{ form_widget(form.currentPassword) }}
+                        <a href="{{ url('fos_user_resetting_request') }}" tabindex="-1">
+                            <i><span style="padding-left:20px">Forgot your password? Get a new one!</span></i>
+                        </a>
+                        <span class="help-block currentPassword-info">{{ form_errors(form.currentPassword) }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="passwords control-group">
+                {{ form_label(form.plainPassword.new, 'New Password') }}
+                <div class="controls">
+                    <div class="input-prepend">
+                        <span class="add-on"><i class="icon-exclamation-sign password_signs"></i></span>
+                        {{ form_widget(form.plainPassword.new) }}
+                        <span class="help-block"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="passwords control-group">
+                {{ form_label(form.plainPassword.confirm, 'Confirm New Password') }}
+                <div class="controls">
+                    <div class="input-prepend">
+                        <span class="add-on"><i class="icon-exclamation-sign password_confirm"></i></span>
+                        {{ form_widget(form.plainPassword.confirm) }}
+                        <span class="help-block plainPassword-info">{{form_errors(form.plainPassword)}}</span>
+                    </div>
+                </div>
+            </div>
+			<span class="help-block form-info">{{ form_errors(form) }}</span>
+			<div style="display:none">
+				{{form_rest(form)}}
+			</div>
+        </div>
+    </div>
+    <i id="loading" class="icon-refresh icon-spin icon-large"></i>
+    <span class="help-inline update-info"></span>
+    <hr />
+    <a class="btn btn-primary" type="submit" id="modify">Update Profile </a>
+    </form>
+{% endblock %}
