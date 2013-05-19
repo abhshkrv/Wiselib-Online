@@ -26,15 +26,7 @@ Installation
 <ol>
 <li>Clone this repository to obtain the application files:<br/>
 <code>~$ git clone https://github.com/abhshkrv/Wiselib-Online</code></li>
-<li>Create folders to store logs and cache and give write permissions<br/>
-
-> cd Wiselib-Online/Symfony/App
-> mkdir cache
-> mkdir logs
-> chmod 777 cache
-> chmod 777 logs
-
-</li>
+<li>Create logs and cache dirs in Symfony/App directory and give write permissions</li>
 <li>Create necessary database for the app to use.</li>
 <li>In the Symfony/App/Config folder, copy the contents parameters.dist to a new file parameters.ini, and update it accordingly</li>
 <li>If you have PHP 5.4, you could use the built-in web server. The built-in server should be used only for development purpose, but it can help you to start your project quickly and easily.
