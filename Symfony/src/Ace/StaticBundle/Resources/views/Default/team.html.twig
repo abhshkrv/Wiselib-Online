@@ -1,0 +1,23 @@
+{% extends '::container.html.twig' %}
+{% block title "The Team" %}
+{% block mainspan %}
+<div class="page-header">
+  <h1>Meet The Team!<small> The guys and gals behind the stuff</small></h1>
+</div>
+{% for i in developers %}
+	{% include 'AceStaticBundle:Default:render_developer.html.twig' with {'developer': i} only %}
+{% endfor %}
+<div>
+  <h1>Friends<small> Our awesome friends and contributors</small></h1>
+</div>
+{% for i in friends %}
+	{% include 'AceStaticBundle:Default:render_developer.html.twig' with {'developer': i} only %}
+{% endfor %}
+<div>
+  <h1>Past Members<small> Our friends who moved on to work on other great stuff</small></h1>
+</div>
+{% for i in past %}
+	{% include 'AceStaticBundle:Default:render_developer.html.twig' with {'developer': i} only %}
+{% endfor %}
+
+{% endblock %}

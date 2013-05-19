@@ -1,0 +1,43 @@
+AceGenericBundle_index:
+    pattern:  /
+    defaults: { _controller: AceGenericBundle:Default:index }
+
+AceGenericBundle_user:
+    pattern:  /user/{user}
+    defaults: { _controller: AceGenericBundle:Default:user }
+
+AceGenericBundle_project:
+    pattern:  /sketch:{id}
+    defaults: { _controller: AceGenericBundle:Default:project }
+
+AceGenericBundle_projectfiles:
+    pattern:  /files
+    defaults: { _controller: AceGenericBundle:Default:projectfiles }
+    requirements:
+       _method:  POST
+
+AceGenericBundle_embed_project:
+    pattern:  /embed/sketch:{id}
+    defaults: { _controller: AceGenericBundle:Default:project, embed:true }
+
+AceGenericBundle_libraries:
+    pattern: /libraries
+    defaults: {_controller: AceGenericBundle:Default:libraries }
+
+AceGenericBundle_example:
+    pattern: /example/{library}/{example}/{url}
+    defaults: {_controller: AceGenericBundle:Default:example }
+    requirements:
+        url: ".+"
+
+AceGenericBundle_boards:
+    pattern:  /boards
+    defaults: { _controller: AceGenericBundle:Default:boards}
+
+AceGenericBundle_embedded_compilerflasher_js:
+    pattern:  /embed/compilerflasher.js
+    defaults: { _controller: AceGenericBundle:Editor:embeddedCompilerFlasherJavascript }
+
+AceGenericBundle_boardslist:
+    pattern:  /boardslist
+    defaults: { _controller: AceGenericBundle:Default:boardslist }

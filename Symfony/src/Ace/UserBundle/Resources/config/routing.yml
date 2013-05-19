@@ -1,0 +1,59 @@
+AceUserBundle_exists:
+    pattern:  /exists/{username}
+    defaults: { _controller: ace_user.usercontroller:existsAction }
+
+AceUserBundle_email_exists:
+    pattern:  /email_exists/{email}
+    defaults: { _controller: ace_user.usercontroller:emailExistsAction }
+
+AceUserBundle_getuser:
+    pattern:  /getuser/{username}
+    defaults: { _controller: ace_user.usercontroller:getUserAction }
+
+AceUserBundle_getcurrentuser:
+    pattern:  /getcurrentuser
+    defaults: { _controller: ace_user.usercontroller:getCurrentUserAction }
+
+AceUserBundle_options:
+    pattern:  /options
+    defaults: { _controller: ace_user.optionscontroller:optionsEditAction }
+    
+AceUserBundle_iscurrentpassword:
+    pattern:  /iscurrentpassword
+    defaults: { _controller: ace_user.optionscontroller:isCurrentPasswordAction }
+    requirements:
+        _method:   POST
+
+AceUserBundle_isemailavailable:
+    pattern:  /isemailavailable
+    defaults: { _controller: ace_user.optionscontroller:isEmailAvailableAction }
+    requirements:
+        _method:   POST
+
+AceUserBundle_search:
+    pattern: /search/user/{token}
+    defaults: { _controller: ace_user.usercontroller:searchAction }
+
+AceUserBundle_searchName:
+    pattern: /search/name/{token}
+    defaults: { _controller: ace_user.usercontroller:searchNameAction }
+
+AceUserBundle_searchUsername:
+    pattern: /search/username/{token}
+    defaults: { _controller: ace_user.usercontroller:searchUsernameAction }
+
+AceUserBundle_searchTwitter:
+    pattern: /search/twitter/{token}
+    defaults: { _controller: ace_user.usercontroller:searchTwitterAction }
+
+AceUserBundle_enabled:
+    pattern: /enabled
+    defaults: { _controller: ace_user.usercontroller:enabledAction }
+
+AceUserBundle_active:
+    pattern: /active
+    defaults: { _controller: ace_user.usercontroller:activeAction }
+
+AceUserBundle_inlineregister:
+    pattern: /inlineregister
+    defaults: { _controller: ace_user.usercontroller:inlineRegisterAction }

@@ -1,0 +1,5 @@
+AceSenderBundle_tftp:
+    pattern:  /tftp/
+    defaults: { _controller: AceSenderBundle:Default:tftp }
+    requirements:
+        _method:  POST

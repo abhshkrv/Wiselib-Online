@@ -1,0 +1,109 @@
+{% extends '::container.html.twig' %}
+{% block title "Plugins" %}
+{% block stylesheets %}
+	<link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/fkjidelplakiboijmadcpcbpboihkmee">
+{% endblock %}
+{% block mainspan %}
+	<div class="page-header">
+		<h1>The Plugins</h1>
+		<small>Downloading the correct plugin for your browser or Os!</small>
+	</div>
+	<object id="plugin0" type="application/x-codebendercc" width="0" height="0">
+	</object>
+
+	<div>
+		<br/>
+		Jump to : <a href="#firefox">Firefox</a>, <a href="#chrome">Chrome</a>, <a href="#other">Other</a>
+
+		<div id="chrome-set">
+			<h3 id="chrome">
+				Google Chrome
+				<img src='http://i.i.com.com/cnwk.1d/i/tim/2011/03/16/Chrome-logo-2011-03-16.jpg' width="30px">,
+				Chromium
+				<img src='http://i.i.com.com/cnwk.1d/i/tim/2011/03/08/product_logo_256.png' width="30px"/>
+				<small>(Window, Linux, Mac)</small>
+			</h3>
+			<div id="chrome-alert">
+				<div id="mca" class="alert alert-error fade in">
+					<button type="button" class="close" data-dismiss="alert">×</button>
+					You are not using the Chrome Store Version of the plugin, do the following:
+					<ul>
+						<li>Remove the old plugin by going to Menu -> Tools -> Extensions</li>
+						<li>Find the Codebender Plugin and click on the Trash Can icon</li>
+						<li>Click <a onclick='chrome.webstore.install()'>Add to Chrome</a></li>
+					</ul>
+				</div>
+			</div>
+			<script type="text/javascript">
+				if (navigator.userAgent.toLowerCase().indexOf('chrome') != -1) {
+					version = document.getElementById('plugin0').version;
+					if (version>= "1.5.3") {
+						$("#mca").alert('close');
+					}
+				}else{
+					$("#mca").alert('close');
+				}
+			</script>
+			<ul>
+				<li>The Codebender extension is available in the Chrome Store. <a onclick='chrome.webstore.install()'>Add
+					to Chrome</a>.<br/>
+				<li>Open your project and use it!
+			</ul>
+		</div>
+
+		<strong>
+			We are waiting for approval from the Mozilla Add-Ons Library. This will allow you to immediately use the plugin with just one click. Until then you can download it following the instructions bellow:
+		</strong>
+
+		<div id="firefox-set">
+			<h3 id="firefox">
+				Firefox
+				<img src='https://people.mozilla.com/~faaborg/files/shiretoko/firefoxIcon/firefox-512-noshadow.png'
+					 width="30px"/>
+				<small>(Window, Linux, Mac)</small>
+			</h3>
+			<ul>
+				<li>Firefox Addons are packaged in xpi format.<br/>
+				<li>Just Download the file from <a id="xpi-download-url"
+												   href="{{ asset('codebender.xpi') }}">here(xpi)</a> and your browser
+					will ask you to install the plugin.<br/>
+					<img src="{{ asset('pluginsImg/firefox-install-mess.jpg') }}" width="500px"><br/>
+				<li>Once Installed just restart your browser and you are ready!
+			</ul>
+		</div>
+
+		<div id="others-set">
+			<h3 id="other">
+				All Browsers - Windows &amp; Mac
+				<img src='https://people.mozilla.com/~faaborg/files/shiretoko/firefoxIcon/firefox-512-noshadow.png'
+					 width="30px"/>
+				<img src='http://i.i.com.com/cnwk.1d/i/tim/2011/03/16/Chrome-logo-2011-03-16.jpg' width="30px">
+				<img src='http://i.i.com.com/cnwk.1d/i/tim/2011/03/08/product_logo_256.png' width="30px"/>
+				<img src='http://media.opera.com/media/images/icon/Opera_512x512.png' width="30px">
+				<img src='https://upload.wikimedia.org/wikipedia/en/6/61/Apple_Safari.png' width="30px">
+			</h3>
+			<h4>
+				<small>Windows</small>
+			</h4>
+			<ul>
+				<li>On Windows you can also use our plugin with Opera and Safari (in addition to the above
+					browsers).<br/>
+				<li>You can download the universal msi installer from <a id="msi-download-url"
+																		 href="{{ asset('Codebendercc.msi') }}">here</a>.<br/>
+				<li>Once you have installed the plugin, you will be able to use it on all browsers (you may need to
+					restart your browser).<br/>
+			</ul>
+			<h4>
+				<small>Mac</small>
+			</h4>
+			<ul>
+				<li>On Mac, you can also use our plugin with Opera and Safari (in addition to the above browsers).<br/>
+				<li>You can download the universal installer from <a id="pkg-download-url"
+																	 href="{{ asset('codebender.zip') }}">here</a>.<br/>
+				<li>Once you have installed the plugin, you will be able to use it on all browsers (you may need to
+					restart your browser).<br/>
+			</ul>
+		</div>
+	</div>
+
+{% endblock %}

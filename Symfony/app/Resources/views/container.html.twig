@@ -1,0 +1,51 @@
+{% extends '::template.html.twig' %}
+
+{#
+{% block stylesheets_base %}
+{{ parent() }}
+{% endblock %}
+#}
+
+
+{% block content %}
+	{% block precontainer_content %}{% endblock %}
+
+	<div id="mycontainer" class="container">
+
+			{% if app.session.hasFlash('notice') %}
+			    <div class="alert alert-success flash-notice">
+			        <h4>{{ app.session.flash('notice') }}</h4>
+			    </div>
+			{% endif %}
+
+			{% if app.session.hasFlash('error') %}
+			    <div class="alert alert-error flash-notice">
+			        <h4>{{ app.session.flash('error') }}</h4>
+			    </div>
+			{% endif %}
+
+			<div class="container-fluid">
+			{% block fluidcontainer %}
+				<div class="row-fluid">
+					{% if is_granted('ROLE_USER') %}		      
+					{% block sidebar %}
+					<div class="span4">
+					    {% render "AceUtilitiesBundle:Default:sidebar" %}    
+					</div>    	
+					{% endblock %}
+					<div class="span8">
+					{% else %}
+					<div class="span12">
+					{% endif %}
+					{% block alert %}
+					{% endblock %}
+					{% block mainspan %}
+		
+					{% endblock %}
+				    </div><!--/span-->
+	
+			  </div><!--/row-->
+			{% endblock %}
+			</div><!--/.fluid-container-->	
+	</div><!--/container-->
+{% endblock %}

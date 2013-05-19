@@ -1,0 +1,87 @@
+AceUtilitiesBundle_newproject:
+    pattern:  /newproject
+    defaults: { _controller: AceUtilitiesBundle:Default:newproject }
+    requirements:
+       _method:  POST
+
+AceUtilitiesBundle_deleteproject:
+   pattern:  /deleteproject/{id}
+   defaults: { _controller: AceUtilitiesBundle:Default:deleteproject }
+
+AceUtilitiesBundle_listfilenames:
+   pattern:  /listfilenames/{id}/{show_ino}
+   defaults: { _controller: AceUtilitiesBundle:Default:listFilenames }
+
+AceUtilitiesBundle_getprojectdescription:
+   pattern:  /getprojectdescription/{id}
+   defaults: { _controller: AceUtilitiesBundle:Default:getDescription }
+
+AceUtilitiesBundle_setprojectdescription:
+   pattern:  /setprojectdescription/{id}
+   defaults: { _controller: AceUtilitiesBundle:Default:setDescription }
+   requirements:
+      _method:  POST
+
+AceUtilitiesBundle_setprojectname:
+  pattern:  /setprojectname/{id}
+  defaults: { _controller: AceUtilitiesBundle:Default:setName }
+  requirements:
+     _method:  POST
+
+AceUtilitiesBundle_renamefile:
+  pattern:  /renamefile/{id}
+  defaults: { _controller: AceUtilitiesBundle:Default:renameFile }
+  requirements:
+    _method:  POST
+
+AceUtilitiesBundle_clone:
+  pattern:  /clone/{id}
+  defaults: { _controller: AceUtilitiesBundle:Default:clone }
+
+AceUtilitiesBundle_download:
+  pattern:  /download/{id}
+  defaults: { _controller: AceUtilitiesBundle:Default:download }
+
+AceUtilitiesBundle_log:
+  pattern:  /log/{message}
+  defaults: { _controller: AceUtilitiesBundle:Default:log }
+
+AceUtilitiesBundle_savecode:
+  pattern:  /savecode/{id}
+  defaults: { _controller: AceUtilitiesBundle:Default:saveCode }
+  requirements:
+     _method:  POST
+
+AceUtilitiesBundle_createfile:
+  pattern:  /createfile/{id}
+  defaults: { _controller: AceUtilitiesBundle:Default:createFile }
+  requirements:
+    _method:  POST
+
+AceUtilitiesBundle_deletefile:
+  pattern:  /deletefile/{id}
+  defaults: { _controller: AceUtilitiesBundle:Default:deleteFile }
+  requirements:
+    _method:  POST
+
+AceUtilitiesBundle_listboards:
+  pattern:  /listboards
+  defaults: { _controller: ace_utilities.boardcontroller:listAction }
+ 
+AceUtilitiesBundle_upload:
+    pattern: /upload/
+    defaults: {_controller: AceUtilitiesBundle:Default:upload }
+    requirements:
+        _method:  POST|GET
+
+AceUtilitiesBundle_uploadfiles:
+    pattern: /sketch:{id}/upload/
+    defaults: {_controller: AceUtilitiesBundle:Default:uploadfiles }
+    requirements:
+        _method:  POST|GET
+
+AceUtilitiesBundle_filecreate:
+  pattern:  /filecreate/{id}/{name}
+  defaults: { _controller: AceUtilitiesBundle:Default:filecreate }
+  requirements:
+    _method:  POST

@@ -1,0 +1,126 @@
+{% extends '::container.html.twig' %}
+{% block title %}
+	About {{ site_name }}
+{% endblock %}
+
+{%  block stylesheets %}
+	<style type="text/css">
+		p
+		{
+			text-align: justify;
+		}
+		.img-screenshot
+		{
+			margin-top: 10px;
+			margin-bottom: 10px;
+			border-radius: 5px;
+		}
+	</style>
+{% endblock %}
+{% block mainspan %}
+	<h1>{{ site_name }}
+		<small>we help you write and share code</small>
+	</h1>
+	<div class="row-fluid">
+		<div class="span6">
+			<a href="{{ asset("images/codebender_editor.png") }}" rel="lightbox" title="codebender's editor page">
+				<img class="img-screenshot" src="{{ asset("images/codebender_editor.png") }}">
+			</a>
+		</div>
+		<div class="span6">
+			<h3>Code</h3>
+			<h4>State of the art editor. Awesome compiler.</h4>
+			<p>
+				{{ site_name }} provides you with great development tools to help you code faster and easier, and finish
+				what you are building faster, so you can move on to other cool stuff. We offer a state of the art
+				editor which great features, such as:
+			</p>
+			<ul>
+				<li>syntax highlighting</li>
+				<li>indentation</li>
+				<li>code completion <small>(coming soon)</small></li>
+				<li>code folding</li>
+			</ul>
+			<p>
+				If you have no idea what we're talking about, let's just say, it's a great editor, and you feel that
+				when you use it. But we don't just stay at the editor. With {{ site_name }}, you can compile your
+				code much faster. No installations. No need to manage outdated tools. Just use our wicked fast, online
+				compiler and get the work done.
+			</p>
+			<p>
+				Not only that, but we're also helping you squash bugs faster too. Trying to understand exactly what's
+				wrong can get hard. {{ site_name }} gives you much a better error output, so you can pinpoint the
+				mistake. No more cryptic messages, no more vague error outputs.
+			</p>
+		</div>
+	</div>
+	<div class="row-fluid">
+		<div class="span6">
+			<h3>Deploy</h3>
+			<h4>Hassle-free. USB cable or the cloud. It doesn't matter.</h4>
+			<p>
+				Traditionally, you would need to install an IDE, which includes all the necessary software, find and
+				install the correct drivers, set permissions, etc. It can take 10-60 minutes. Or it can be a total mess.
+			</p>
+			<p>
+				With {{ site_name }}, you can program your Arduino straight from your browser. No need to find, install,
+				update and manage libraries and drivers. {{ site_name }} does that for you. Just install our browser
+				plugin and follow our
+				<a href="{{ path("AceStaticBundle_walkthrough", {"page": 1}) }}">Getting Started</a>
+				guide. From having an Arduino, to having a programmed Arduino. In mere minutes.
+			</p>
+			<p>
+				After installing the pluggin, you can flash any codebender sketch to your device. See the code bellow?
+				You could load that to your device, straight from this page!
+			</p>
+			<p>
+				And if you have an Arduino Ethernet or Arduino & Ethernet Shield, you can also program it through the
+				network using our "Cloud Flash" feature.
+			</p>
+		</div>
+		<div class="span6">
+			<a href="{{ asset("images/codebender_flashing.png") }}" rel="lightbox" title="codebender flashing">
+				<img class="img-screenshot" src="{{ asset("images/codebender_flashing.png") }}">
+			</a>
+		</div>
+	</div>
+	<div class="row-fluid">
+	{% if is_granted('ROLE_USER') %}
+		<div class="span12">
+	{% else %}
+		<div class="span6">
+	{% endif %}
+			<iframe style="height: 510px; width: 100%; margin: 10px 0 10px" allowTransparency="true" src="http://codebender.cc/embed/sketch:8026" frameborder="0"></iframe>
+		</div>
+	{% if is_granted('ROLE_USER') %}
+	</div>
+	<div class="row-fluid">
+		<div class="span12">
+	{% else %}
+		<div class="span6">
+		{% endif %}
+			<h3>Do It Together</h3>
+			<h4>From DIY to DIT. Share and Collaborate.</h4>
+			<p>
+				You're building something awesome. Why keep it to yourself? With {{ site_name }}, you can share your
+				code with the rest of the world. Plus, if you're building something, like an automatic pet feeder for
+				your vacations, chances are someone has already built something similar. Why start from scratch?
+				With {{ site_name }}, you can:
+			</p>
+			<ul>
+				<li>share your work with the world</li>
+				<li>flash an existing sketch to your device</li>
+				<li>clone an existing sketch and modify it to your needs</li>
+				<li>embed code in your website, blog, or tutorials</li>
+			</ul>
+			<p>
+				With {{ site_name }}, you can show people the exact code you're using and make your posts more
+				interesting. In fact, that's exactly what we did here.
+			</p>
+		</div>
+	</div>
+
+	{% if not is_granted('ROLE_USER') %}
+		{% render 'ace_user.usercontroller:inlineRegisterAction' %}
+	{% endif %}
+{% endblock %}

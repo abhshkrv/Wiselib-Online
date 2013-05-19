@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+<channel>
+	<title>codebender blog</title>
+	<link>http://codebender.cc</link>
+	<description>news and trivia about codebender.cc</description>
+{#
+    <lastBuildDate>Mon, 28 Aug 2006 11:12:55 -0400 </lastBuildDate>
+    <pubDate>Tue, 29 Aug 2006 09:00:00 -0400</pubDate>
+#}
+	{% for post in posts %}
+	<item> 
+		<title>{{ post.title }}</title>  
+		<link>{{ url('AceBlogBundle_blog') }}</link>  
+		<description><![CDATA[{{ post.text | raw }}]]></description>  
+		<pubDate>{{ post.date | date('r') }}</pubDate>  
+	</item>  
+	{% endfor %}
+</channel> 
+</rss>
+

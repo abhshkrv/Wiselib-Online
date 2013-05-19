@@ -1,0 +1,46 @@
+{% extends '::container.html.twig' %}
+{% block title "Library Example" %}
+{% block stylesheets %}
+<link href='http://twitter.github.com/bootstrap/assets/js/google-code-prettify/prettify.css' type="text/css" rel="stylesheet" />
+<script src='http://cdnjs.cloudflare.com/ajax/libs/prettify/188.0.0/prettify.js' type='text/javascript'></script>
+<style type="text/css" media="screen">
+.page-header
+{
+	margin-top: 0;	
+}
+h1 small
+{
+	float:right;
+}
+#menu-getproject
+{
+	float:right;
+}
+.modal-footer button.btn {
+    width: 20%;
+}
+</style>
+{% endblock %}
+{% block body_options %} onload="prettyPrint()"{% endblock %}
+{% block mainspan %}
+	<div class="page-header row-fluid" >
+		<h1>{{library}} : {{ example }}</h1>
+	</div>
+	<div class="row-fluid">
+		<hr>
+		<div id="menu-getproject" class="btn-group">
+			{#<a class="btn btn-primary" href="{{path('AceUtilitiesBundle_download',{'id': project_id })}}">Download</a> #}
+			{% if is_granted('ROLE_USER') %}
+			<form class="form-search" method='post' action='{{ path('AceUtilitiesBundle_newproject')}}'>
+				<div class="input-prepend input-append">
+					<span class="add-on">Name:</span>
+					<input type="text" name='project_name'>
+					<input type="hidden" name='code' value = "{{files[0]["code"]}}">
+					<button type="submit" class="btn">Clone</button>
+				</div>
+			</form>
+			{% endif %}
+		</div>
+	</div>
+	{% include 'AceUtilitiesBundle:Default:list_project_files.html.twig' with {'files': files} only %}
+{% endblock %}

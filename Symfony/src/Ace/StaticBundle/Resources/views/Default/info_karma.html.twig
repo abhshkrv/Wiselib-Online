@@ -1,0 +1,31 @@
+{% extends '::container.html.twig' %}
+{% block title "codebender - karma" %}
+
+{% block mainspan %}
+	<div class="page-header">
+		<h1>Karma</h1>
+	</div>
+
+	<div class="row-fluid">
+		<div class="span4">
+			<a href="{{ asset("images/codebender_karma.png") }}" rel="lightbox" title="yin yang">
+				<img class="img-screenshot" src="{{ asset("images/codebender_karma.png") }}">
+			</a>
+		</div>
+		<div class="span8">
+			<h3>What is karma?</h3>
+			<p>
+				Karma in Indian religions is the concept of "action" or "deed". Karma is not punishment or retribution
+				but simply an extended expression or consequence of natural acts. Karma means "deed" or "act" and more
+				broadly names the universal principle of cause and effect, action and reaction, that governs all life.
+			</p>
+			<h3>Karma in {{ site_name }}</h3>
+			<p>
+				In {{ site_name }}, karma is points you gain by helping others, inviting friends, and generally being a
+				great guy (or gal). The more you help others, the more your karma increases. This is a way to track your
+				popularity not only by "likes" from others or by the number of "followers" you have, but also in
+				meaningful ways, like how much your actions are advancing our community and the Maker movement.
+			</p>
+		</div>
+	</div>
+{% endblock %}

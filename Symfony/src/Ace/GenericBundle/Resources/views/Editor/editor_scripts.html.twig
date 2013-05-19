@@ -1,0 +1,335 @@
+<script type="text/javascript">
+
+
+function renameFilenameModal(filename) {
+    $("#oldFilename").val(filename);
+    $("#newFilename").val(filename);
+    $("#filenameModal").modal('show');
+}
+
+function renameFilename() {
+    $.post("{{ path('AceUtilitiesBundle_renamefile', {'id':project_id} ) }}", {oldFilename:$("#oldFilename").val(), newFilename:$("#newFilename").val()}, function (data) {
+        $("#filenameModal").modal('hide');
+        handleResponse(data);
+    });
+}
+
+function handleResponse(response) {
+    var response = JSON.parse(response);
+    if (response["success"])
+        location.reload();
+    else
+        setOperationOutput(response["error"]);
+}
+
+function setOperationProgress(newprogress) {
+    $("#progress").show('fast');
+    $("#progress_val").width(newprogress + '%');
+    $("#operation_output").hide('fast');
+    // $("#progress").show('fast');
+    // if(newprogress < 10)
+    // 	window.currentProgress = 0.5*newprogress;
+    // else
+    // 	window.currentProgress = 0;
+    // $("#progress_val").width(window.currentProgress+'%');
+    //
+    // window.maxProgress = newprogress;
+    // window.interval = setInterval(function()
+    // {
+    // 	$("#progress_val").width(window.currentProgress+'%');
+    // 	if(window.currentProgress < window.maxProgress)
+    // 		window.currentProgress++;
+    // },10);
+    // $("#operation_output").hide('fast');
+}
+
+function setOperationOutput(output) {
+    $("#progress").hide('fast');
+    $("#progress_val").width('0%');
+    $("#operation_output").html(output).show('fast');
+    //clear the interval here
+}
+
+function save() {
+    loadCode();
+    setOperationProgress(90);
+    $.post("{{ path('AceUtilitiesBundle_savecode', {'id': project_id}) }}", {data:JSON.stringify(window.files)}, function (data) {
+        $("#save").addClass("btn-success");
+        $("#save_icon").addClass("icon-white");
+        setOperationOutput("Saved successfuly.");
+        window.setTimeout(function () {
+            $("#save").removeClass("btn-success");
+            $("#save_icon").removeClass("icon-white");
+        }, 500);
+        // alert("Data received: " + data);
+    });
+}
+
+function revert() {
+	$("#revert").addClass("btn-success");
+    $("#revert_icon").addClass("icon-white");
+	window.files = jsObjClone(window.savedfiles);
+    editor.getSession().setValue($("<div/>").html(window.files[window.selectedFile]).text().replace(/&quot;/g, "\""));
+	window.currentfiles = refreshFiles();
+	setOperationOutput("Reverted to the last saved state.");
+    window.setTimeout(function () {
+		$("#revert").removeClass("btn-success");
+        $("#revert_icon").removeClass("icon-white");
+    }, 100);
+}
+
+
+function verification_onFail(message)
+{
+    $("#compile_output").css('color', 'black');
+    $("#editor").css("bottom", "180px");
+    $("#compile_output").css("padding-top", "10px");
+    $("#compile_output").css("height", "120px");
+    $("#compile_output").addClass("well");
+    $("#compile_output").html(message);
+    $("#compile_output").css("visibility", "visible");
+    editor.resize();
+}
+
+function verification_onSuccess()
+{
+    $("#compile_output").css('color', '');
+    $(".ace_gutter-cell").css("text-decoration", "").css("color", "");
+    $("#editor").css("bottom", "");
+    $("#compile_output").css("height", "");
+    $("#compile_output").css("padding-top", "");
+    $("#compile_output").css("visibility", "");
+    $("#compile_output").removeClass("well");
+    editor.resize();
+}
+
+
+old_usbflash = usbflash;
+usbflash = function(){
+    $("#collapseSerial").height(0);
+    $("#collapseSerial").removeClass("in");
+    old_usbflash();
+
+}
+
+
+old_load_files = load_files;
+load_files = function(){
+    var pos = editor.getCursorPosition();
+    loadCode();
+    editor.moveCursorTo(pos.row, pos.column, true);
+    return old_load_files();
+}
+
+</script>
+
+
+{#Editor Scripts#}
+<script type="text/javascript" charset="utf-8">
+    function addCommands() {
+        editor.commands.addCommand({
+            name:'saveFile',
+            bindKey:{
+                win:'Ctrl-S',
+                mac:'Command-S',
+                sender:'editor|cli'
+            },
+            exec:function (env, args, request) {
+                save();
+                window.savedfiles = refreshFiles();
+            }
+        });
+
+        editor.commands.addCommand({
+            name:'verifyFile',
+            bindKey:{
+                win:'Ctrl-R',
+                mac:'Command-R',
+                sender:'editor|cli'
+            },
+            exec:function (env, args, request) {
+                verify();
+            }
+        });
+
+        editor.commands.addCommand({
+            name:'uploadFile',
+            bindKey:{
+                win:'Ctrl-U',
+                mac:'Command-U',
+                sender:'editor|cli'
+            },
+            exec:function (env, args, request) {
+                usbflash();
+            }
+        });
+
+        editor.commands.addCommand({
+            name:'CheckWord',
+            bindKey:{
+                win:'Ctrl-Space',
+                mac:'Ctrl-Space',
+                sender:'editor|cli'
+            },
+            exec:function (env, args, request) {
+                var selection = editor.getSession().doc.getTextRange(editor.getSelectionRange());
+                if (selection == "") {
+                    var row = editor.getSession().getSelection().getCursor().row;
+                    var column = editor.getSession().getSelection().getCursor().column
+                    var string = editor.getSession().getLine(editor.getSession().getSelection().getCursor().row);
+                    var first_half = string.substring(0, column).match(/\w+$/);
+                    var second_half = string.substring(column, string.length).match(/^\w+/);
+                    if (first_half == null) first_half = "";
+                    if (second_half == null) second_half = "";
+                    selection = first_half + second_half;
+                }
+                window.open('http://www.google.com/search?q=' + selection + '+inurl:arduino.cc/en/Reference&btnI');
+            }
+        });
+
+        editor.commands.addCommand({
+            name:'MyComments',
+            bindKey:{
+                win:'Ctrl-/',
+                mac:'Command-/',
+                sender:'editor|cli'
+            },
+            exec:function (env, args, request) {
+                editor.toggleCommentLines();
+            }
+        });
+
+        editor.commands.addCommand({
+            name:'serialMonitor',
+            bindKey:{
+                win:'Ctrl-Shift-M',
+                mac:'Command-Shift-M',
+                sender:'editor|cli'
+            },
+            exec:function (env, args, request) {
+                connect();
+            }
+        });
+
+        editor.commands.addCommand({
+            name:'autoFormat',
+            bindKey:{
+                win:'Ctrl-Alt-[',
+                mac:'Command-Alt-[',
+                sender:'editor|cli'
+            },
+            exec:function (env, args, request) {
+                autoFormat();
+            }
+        });
+
+    }
+
+    function autoFormat() {
+        editor.getSession().setValue(js_beautify(editor.getSession().getValue(), {'indent_size':1, 'indent_char':'\t', 'brace_style':'expand'}))
+    }
+
+</script>
+
+<script type="text/javascript">
+
+function selectFile(filename)
+{
+
+    loadCode(filename);
+    editor.getSession().setValue($("<div/>").html(window.files[filename]).text().replace(/&quot;/g, "\""));
+    window.selectedFile = filename;
+
+    $(".filelist").css("font-weight", "");
+	$("a:contains("+filename+")")[0].setAttribute("style", "font-weight:bold;");
+}
+
+function loadCode() {
+    window.files[window.selectedFile] = $("<div/>").text(editor.getSession().getValue()).html().replace(/"/g, "&quot;");
+}
+
+function createFile() {
+    setOperationProgress(90);
+    var val = { filename:$("#createfield").val() };
+    $.post("{{ path('AceUtilitiesBundle_createfile', {'id':project_id} ) }}", {data:JSON.stringify(val)}, function (data) {
+        $("#creationModal").modal('hide');
+        handleResponse(data);
+    });
+}
+
+function deleteFileModal(filename) {
+//    $("#oldFilename").val(filename);
+//    $("#newFilename").val(filename);
+    $("#filedeleteButton").attr("href","javascript:deleteFile('"+filename+"');");
+    $("#filedeleteModal").modal('show');
+}
+
+function deleteFile(filename) {
+    setOperationProgress(90);
+    var val = { "filename":filename };
+    $.post("{{ path('AceUtilitiesBundle_deletefile', {'id':project_id} ) }}", {data:JSON.stringify(val)}, function (data) {
+        handleResponse(data);
+    });
+}
+
+function editDescription()
+{
+    $("#description").replaceWith("<textarea id='description' style='resize: none; width:100%;' rows=4>" + $("#description").text() + "</textarea>");
+    $("#description_change_link").text("save");
+    $("#description_change_link").attr("onClick", "saveDescription()");
+}
+
+function saveDescription() {
+    $.post("{{ path('AceUtilitiesBundle_setprojectdescription', {'id':project_id} ) }}", {data:$("#description").val()}, function (data)
+    {
+        $("#description").replaceWith("<p id='description'>" + $("#description").val() + "</p>");
+        $("#description_change_link").removeClass("btn btn-primary");
+        $("#description_change_link").text("edit");
+    });
+}
+
+function editName() {
+    $("#name").replaceWith("<input type='text' id='name' value='"+ $("#name").text() +"'/>");
+    $("#name_change_link").text("save");
+    $("#name_change_link").attr("onClick", "saveName()");
+}
+
+function saveName() {
+    $.post("{{ path('AceUtilitiesBundle_setprojectname', {'id':project_id} ) }}", {data:$("#name").val()}, function (data) {
+        $("#name").replaceWith("<p id='name'>" + $("#name").val() + "</p>");
+        $("#name_change_link").removeClass("btn btn-primary");
+        $("#name_change_link").text("edit");
+        handleResponse(data);
+    });
+}
+
+//Check if two js objects are equal
+function jsObjEquals(obj1, obj2) {
+	for (var i in obj1) {
+		if (!obj2.hasOwnProperty(i)) return false;
+		if (obj1[i] != obj2[i]) return false;
+	}
+	for (var i in obj2) {
+		if (!obj1.hasOwnProperty(i)) return false;
+		if (obj1[i] != obj2[i]) return false;
+	}
+	return true;
+}
+		
+//Manual shallow js object copy - faster than .extend()
+function jsObjClone(obj) {
+	var objcopy = {};
+	for (var i in obj) {
+		if (obj.hasOwnProperty(i))
+			objcopy[i] = obj[i];
+	}
+	return objcopy;
+}
+		
+function refreshFiles(){
+	loadCode();
+	var filesObj = jsObjClone(window.files);
+	return filesObj;
+}
+
+</script>

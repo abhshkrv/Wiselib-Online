@@ -1,0 +1,57 @@
+{% extends '::container.html.twig' %}
+{% block title "Search Results" %}
+{% block mainspan %}
+<h3>Search results for: {{ query }}</h3>
+<br />
+{% if projects %}
+	<h2>Projects</h2>
+	<table class="table table-bordered table-striped">
+	<thead>
+	<tr>
+	<th>Project Name</th>
+	<th>User</th>
+	</tr>
+	</thead>
+	<tbody>
+	{% for project in projects %}
+		{% for id, info in project %}
+		<tr>
+		<td><a href="{{path('AceGenericBundle_project',{'id': id})}}">{{info['name']}}</a></td>
+		<td><a href="{{path('AceGenericBundle_user',{'user': info['owner']['username']})}}">{{info['owner']['username']}}</a></td>
+		</tr>
+		{% endfor %}
+	{% endfor %}
+	</tbody>
+	</table>
+{% endif %}
+{% if users %}
+	<h2>Users</h2>
+	<table class="table table-bordered table-striped">
+	<thead>
+	<tr>
+	<th>Username</th>
+	<th>Full Name</th>
+	<th style="text-align: right">Karma</th>
+	</tr>
+	</thead>
+	<tbody>
+	{% for user in users %}
+		{% for info in user %}
+		<tr>
+		<td><a href="{{path('AceGenericBundle_user',{'user':info['username']})}}">{{info['username']}}</a></td>
+		<td>{{info["firstname"]}} {{info["lastname"]}}</td>
+		<td>
+			{% include "AceUtilitiesBundle:Default:codebender_karma.html.twig" with {"karma": info["karma"]} %}
+		</td>
+		</tr>
+		{% endfor %}
+	{% endfor %}
+	</tbody>
+	</table>
+{% endif %}
+
+{% if users == null and projects == null %}
+<h2>No results found :(</h2>
+{% endif %}
+
+{% endblock %}

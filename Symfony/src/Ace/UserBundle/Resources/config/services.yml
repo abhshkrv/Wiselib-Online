@@ -1,0 +1,49 @@
+parameters:
+#    ace_user.example.class: Ace\UserBundle\Example
+
+services:
+#    ace_user.example:
+#        class: %ace_user.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]
+
+services:
+    ace_user.usercontroller:
+        class:        Ace\UserBundle\Controller\DefaultController
+        scope: request
+        arguments:
+            templating:  "@templating"
+            securityContext: "@security.context"
+            entityManager: "@doctrine.orm.entity_manager"
+            container: "@service_container"
+
+    ace_user.optionscontroller:
+        class: Ace\UserBundle\Controller\OptionsController
+        scope: request
+        arguments:
+            templating:  "@templating"
+            securityContext: "@security.context"
+            container: "@service_container"
+            request: "@request"
+            usermanager: "@fos_user.user_manager"
+            encoderFactory: "@security.encoder_factory"
+            entityManager: "@doctrine.orm.entity_manager"
+            listapi: %listapi%
+            listid: %listid%
+
+
+    ace_user.experimental_provider:
+        class: Ace\UserBundle\Security\Provider\ExperimentalProvider
+        public: false
+        arguments: ["@fos_user.user_manager"]
+
+    ace_user.registration.form.type:
+        class: Ace\UserBundle\Form\Type\RegistrationFormType
+        arguments: [%fos_user.model.user.class%]
+        tags:
+            - { name: form.type, alias: ace_user_registration }
+
+    ace_user.form.handler.registration:
+        class: Ace\UserBundle\Form\Handler\RegistrationFormHandler
+        arguments: ["@fos_user.registration.form", "@request", "@fos_user.user_manager", "@fos_user.mailer", "@ace_user.usercontroller", "@ace_project.sketchmanager", "@ace_utilities.referralcodecontroller", %listapi%, %listid%]
+        scope: request
+        public: false

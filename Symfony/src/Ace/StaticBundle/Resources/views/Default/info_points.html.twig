@@ -1,0 +1,84 @@
+{% extends '::container.html.twig' %}
+{% block title "codebender points" %}
+
+{% block javascripts %}
+	<script>!function (d, s, id)
+		{
+			var js, fjs = d.getElementsByTagName(s)[0];
+			if (!d.getElementById(id))
+			{
+				js = d.createElement(s);
+				js.id = id;
+				js.src = "//platform.twitter.com/widgets.js";
+				fjs.parentNode.insertBefore(js, fjs);
+			}
+		}(document, "script", "twitter-wjs");
+	</script>
+{% endblock %}
+
+{% block mainspan %}
+	<div class="page-header">
+		<h1>codebender points</h1>
+	</div>
+
+	<div class="row-fluid">
+		<div class="span12">
+			<p style="text-align: justify">
+				What's codebender points? Put simply, a way for us to say thank you! We want to encourage people to
+				spread the word about codebender, and generally <strong>be excellent with each other</strong>. And we
+				like showing our appreciation in meaningful, tangible ways. That's why we're introducing codebender
+				points. Every time you do something good for the community, you will earn points that you can use to
+				claim gifts or unlock extra functionality within {{ site_name }}.
+			</p>
+		</div>
+	</div>
+	<div class="row-fluid">
+		<div class="span6">
+			<a href="{{ asset("images/codebender t-shirt.png") }}" rel="lightbox" title="codebender t-shirt">
+				<img class="img-screenshot" src="{{ asset("images/codebender t-shirt.png") }}">
+			</a>
+		</div>
+		<div class="span6">
+			<h3>Do good. Get T-Shirts!</h3>
+			<p style="text-align: justify">
+				We start off with referrals. When you invite a friend to {{ site_name }} and they register, you get 20
+				points and they get 50. And we kick it off with offering you an awesome T-Shirt when you gather 300
+				points. And we're adding many more ways to get points, so don't worry, you'll get it in no time.
+			</p>
+		</div>
+	</div>
+	<div class="row-fluid">
+		<div class="span12">
+			<h4>Referral Code</h4>
+			<p>
+				To invite your friends to codebender, share this link with them, or use the tweet button in the
+				<strong>Invite a friend</strong> section bellow.
+			</p>
+			<p class="well">
+				<a href="{{ url("fos_user_registration_register") ~ "?referrer=" ~ app.user.username }}" target="_blank">{{ url("fos_user_registration_register") ~ "?referrer=" ~ app.user.username }}</a>
+			</p>
+		</div>
+	</div>
+	<div class="row-fluid">
+		<div class="span6">
+			<h4 style="text-align: center">Twitter</h4>
+			<div class="row-fluid">
+				<div class="span6">
+					<h5>Spread the word</h5>
+					<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://codebender.cc" data-text="Check out codebender. An awesome web platform for Arduino programming." data-size="large">Tweet</a>
+				</div>
+				<div class="span6">
+					<h5>Invite a friend</h5>
+					<a href="https://twitter.com/share" class="twitter-share-button" data-url="{{ url("fos_user_registration_register") ~ "?referrer=" ~ app.user.username }}" data-text="codebender - a web platform for Arduino programming. Register and unlock extras & gifts." data-size="large">
+						Invite a friend!
+					</a>
+				</div>
+			</div>
+		</div>
+		<div class="span6">
+			<h4 style="text-align: center">Facebook</h4>
+			<iframe src="//www.facebook.com/plugins/likebox.php?href=http%3A%2F%2Fwww.facebook.com%2Fcodebender.cc&amp;width=300&amp;height=258&amp;colorscheme=light&amp;show_faces=true&amp;border_color&amp;stream=false&amp;header=false&amp;appId=276306429134783" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:300px; height:258px; display:block; margin:auto;}" allowTransparency="true"></iframe>
+		</div>
+	</div>
+
+{% endblock %}

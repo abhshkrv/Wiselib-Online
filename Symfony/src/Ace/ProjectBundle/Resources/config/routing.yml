@@ -1,0 +1,71 @@
+# AceProjectBundle_create:
+#     pattern:  /create/{owner}/{name}/{description}
+#     defaults: { _controller: ace_project.projectmanager:createAction }
+# 
+# AceProjectBundle_delete:
+#     pattern:  /delete/{id}
+#     defaults: { _controller: ace_project.projectmanager:deleteAction }
+# 
+# AceProjectBundle_clone:
+#     pattern:  /clone/{owner}/{id}
+#     defaults: { _controller: ace_project.projectmanager:cloneAction }
+# 
+# AceProjectBundle_rename:
+#     pattern:  /rename/{id}/{new_name}
+#     defaults: { _controller: ace_project.projectmanager:renameAction }
+# 
+# AceProjectBundle_list:
+#     pattern:  /list/{owner}
+#     defaults: { _controller: ace_project.projectmanager:listAction }
+# 
+# AceProjectBundle_getowner:
+#     pattern:  /getowner/{id}
+#     defaults: { _controller: ace_project.projectmanager:getOwnerAction }
+# 
+# AceProjectBundle_getdescription:
+#     pattern:  /getdescription/{id}
+#     defaults: { _controller: ace_project.projectmanager:getDescriptionAction }
+# 
+# AceProjectBundle_setdescription:
+#     pattern:  /setdescription/{id}/{description}
+#     defaults: { _controller: ace_project.projectmanager:setDescriptionAction }
+# 
+# AceProjectBundle_listFiles:
+#     pattern:  /listfiles/{id}/
+#     defaults: { _controller: ace_project.projectmanager:listFilesAction }
+# 
+# AceProjectBundle_createFile:
+#     pattern:  /createfile/{id}/{filename}/{code}
+#     defaults: { _controller: ace_project.projectmanager:createFileAction }
+# 
+# AceProjectBundle_deleteFile:
+#     pattern:  /deletefile/{id}/{filename}
+#     defaults: { _controller: ace_project.projectmanager:deleteFileAction }
+# 
+# AceProjectBundle_renameFile:
+#     pattern:  /renamefile/{id}/{filename}/{new_filename}
+#     defaults: { _controller: ace_project.projectmanager:renameFileAction }
+# 
+# AceProjectBundle_getFile:
+#     pattern:  /getfile/{id}/{filename}
+#     defaults: { _controller: ace_project.projectmanager:getFileAction }
+# 
+# AceProjectBundle_setFile:
+#     pattern:  /setfile/{id}/{filename}/{code}
+#     defaults: { _controller: ace_project.projectmanager:setFileAction }
+# 
+# AceProjectBundle_search:
+#     pattern: /search/project/{token}
+#     defaults: { _controller: ace_project.projectmanager:searchAction }
+# 
+# AceProjectBundle_searchName:
+#     pattern: /search/name/{token}
+#     defaults: { _controller: ace_project.projectmanager:searchNameAction }
+# 
+# AceProjectBundle_searchDescription:
+#     pattern: /search/description/{token}
+#     defaults: { _controller: ace_project.projectmanager:searchDescriptionAction }
+# 
+# AceProjectBundle_checkexists:
+#     pattern: /exists/{token}
+#     defaults: { _controller: ace_project.projectmanager:checkExistsAction }

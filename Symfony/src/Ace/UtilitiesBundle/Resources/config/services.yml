@@ -1,0 +1,19 @@
+parameters:
+#    ace_utilities.example.class: Ace\UtilitiesBundle\Example
+
+services:
+#    ace_utilities.example:
+#        class: %ace_utilities.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]
+    ace_utilities.handler:
+        class:        Ace\UtilitiesBundle\Handler\DefaultHandler
+
+    ace_utilities.boardcontroller:
+        class:        Ace\UtilitiesBundle\Controller\BoardController
+        arguments:
+            entityManager: "@doctrine.orm.entity_manager"
+
+    ace_utilities.referralcodecontroller:
+        class:        Ace\UtilitiesBundle\Controller\ReferralCodeController
+        arguments:
+            entityManager: "@doctrine.orm.entity_manager"

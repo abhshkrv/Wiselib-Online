@@ -1,0 +1,60 @@
+{% extends 'AceStaticBundle:Walkthrough:skeleton.html.twig' %}
+
+
+{% block javascripts %}
+    <script type="text/javascript" src="{{ path("AceGenericBundle_embedded_compilerflasher_js") }}"></script>
+    <script type="text/javascript">
+        window.setTimeout(function () {
+            if ($(".alert").length == 0) {
+                window.location.replace("{{ path("AceStaticBundle_walkthrough", {"page":page+1}) }}");
+            }
+	        else
+            {
+	            $("#cb_cf").hide();
+	            $("#cb_cf").css("visibility", "visible")
+	            $("#step_output_text").hide(1000);
+	            $("#cb_cf").show(1000);
+            }
+        }, 5000);
+    </script>
+{% endblock %}
+
+{% block stylesheets %}
+    <style>
+	    #cb_cf
+	    {
+		    visibility: hidden;
+	    }
+        #ports_div {
+            visibility: hidden;
+            width: 0px;
+            height: 0px;
+            position: fixed;
+        }
+
+        .alert {
+            font-size: 30px;
+            line-height: 50px;
+            text-align: center;
+        }
+
+        #step_output_text
+        {
+	        font-size: 30px;
+	        line-height: 50px;
+	        text-align: center;
+        }
+
+    </style>
+{% endblock %}
+
+{% block page_content %}
+	<div id="step_output_text">
+		<p>
+			Please wait
+			<i class="icon-spinner icon-spin"></i>
+		</p>
+	</div>
+
+	<div id="cb_cf" data-board="Arduino Uno" data-sections="usbflash" data-plugin-version="1.5.4.20"></div>
+{% endblock %}

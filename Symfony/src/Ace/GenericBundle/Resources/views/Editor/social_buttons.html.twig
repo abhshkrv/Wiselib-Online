@@ -1,0 +1,21 @@
+<div id="social" style="position: absolute; top: 100px; right: -8px;">
+    {#<a href="https://www.facebook.com/dialog/feed?app_id=439261962789824&link={{ app.request.uri | url_encode }}&name=codebender.cc%20%20{{ project_name |url_encode }}&caption=Check%20out%20my%20latest%20Arduino%20project%20on%20codebender&redirect_uri={{ app.request.uri | url_encode }}">#}
+    <a href="http://www.facebook.com/sharer.php?u={{ app.request.uri }}&t=Check%20out%20my%20latest%20Arduino%20project%20on%20codebender&n=codebender.cc%20-%20{{ project_name }}">
+        <img width="36px" src="{{ asset("images/logos/facebook.png") }}">
+    </a>
+    <br/>
+    <a href="https://twitter.com/share"
+            {#class="twitter-share-button"#}
+       data-text="Check out my new Arduino project, {{ project_name }} on @codebender_cc!"
+       data-count="none"><img width="36px" style="margin-top: 4px;"
+                              src="{{ asset("images/logos/twitter.png") }}"></a>
+    <script>!function (d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (!d.getElementById(id)) {
+            js = d.createElement(s);
+            js.id = id;
+            js.src = "//platform.twitter.com/widgets.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }
+    }(document, "script", "twitter-wjs");</script>
+</div>
