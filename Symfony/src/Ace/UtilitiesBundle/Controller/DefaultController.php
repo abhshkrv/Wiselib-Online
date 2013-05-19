@@ -41,6 +41,41 @@ class DefaultController extends Controller
 		return $this->redirect($this->generateUrl('AceGenericBundle_index'));
 	}
 
+    public function cloneprojectAction()
+    {
+        syslog(LOG_INFO, "clone project");
+
+        $user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
+
+        $project_url = $this->getRequest()->request->get('project_url');
+
+        $response = $this->get('ace_project.gitmanager')->cloneprojectAction($user["id"], $project_url)->getContent();
+        $response=json_decode($response, true);
+        if($response["success"])
+        {
+            return $this->redirect($this->generateUrl('AceGenericBundle_project',array('id' => $response["id"])));
+        }
+        $this->get('session')->setFlash('error', "Error: ".$response["error"]);
+        return $this->redirect($this->generateUrl('AceGenericBundle_index'));
+    }
+
+    public function forkprojectAction()
+    {
+        syslog(LOG_INFO, "fork project");
+
+        $user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
+
+        $response = $this->get('ace_project.githubmanager')->forkprojectAction($user["id"], $user["Githubdata"])->getContent();
+        $response=json_decode($response, true);
+        if($response["success"])
+        {
+           //redirect to clone the girhub project in Wiselib-Online
+        }
+        $this->get('session')->setFlash('error', "Error: ".$response["error"]);
+        return $this->redirect($this->generateUrl('AceGenericBundle_index'));
+    }
+
+
 	public function deleteprojectAction($id)
 	{
 
