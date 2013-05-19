@@ -89,12 +89,6 @@
 	    <div class="span12">
 		    <h2>
 			    Hello {{ user["username"] }}!
-			    <a href="{{ path("AceStaticBundle_info_points") }}">
-				    {% include "AceUtilitiesBundle:Default:codebender_points.html.twig" with {"points": user["points"]} %}
-			    </a>
-			    <a href="{{ path("AceStaticBundle_info_karma") }}">
-				    {% include "AceUtilitiesBundle:Default:codebender_karma.html.twig" with {"karma": user["karma"]} %}
-			    </a>
 		    </h2>
 
 	    </div>
@@ -177,50 +171,8 @@
 		</div>
 	</div>
 
-	<div class="row-fluid">
-		<div class="span12">
-			<h3>Unlock extras & gifts</h3>
-			<p>
-				Greate news everyone! We just introduced codebender points. It's our own special way of saying thank you
-				for the support, and rewarding all our friends who spread the word about codebender, help other people,
-				and generally, those who are <strong>excellent to each other</strong>. Interested?
-				<a href="{{ path("AceStaticBundle_info_points") }}">Learn more</a>.
-			</p>
-		</div>
-	</div>
 
-	{% if popular_users %}
-		<div class="row-fluid">
-		<div class="span12">
-			<h4>Popular Users</h4>
-			<hr style="margin-top:0px">
-			<ul class="unstyled">
-			{% for user in popular_users %}
-				<li>
-					<a href="{{ path('AceGenericBundle_user',{'user': user['username']}) }}">
-						{{ user["username"] }}
-						{% include "AceUtilitiesBundle:Default:codebender_karma.html.twig" with {"karma": user["karma"]} %}
-					</a>
-				</li>
-			{% endfor %}
-			</ul>
-		</div>
-	{% endif %}
-		{#<div class="span6">#}
-			{#<h4>Popular Projects</h4>#}
-			{#<hr style="margin-top:0px">#}
-			{#<ul>#}
-				{#<li>#}
-					{#Lorem Impsum#}
-					{#{% include "AceUtilitiesBundle:Default:codebender_copies.html.twig" with {"copies": 50} %}#}
-				{#</li>#}
-				{#<li>Lorem Impsum</li>#}
-				{#<li>Lorem Impsum</li>#}
-				{#<li>Lorem Impsum</li>#}
-				{#<li>Lorem Impsum</li>#}
-			{#</ul>#}
-		{#</div>#}
-	</div>
+
 
 {% endblock %}
 
